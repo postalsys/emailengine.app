@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>EmailEngine vs Unipile: A Self-Hosted Unipile Alternative</title>
+    <meta name="description" content="EmailEngine and Unipile compared: email-only self-hosted vs multi-channel managed SaaS, flat annual pricing vs per-account billing. Including where Unipile is the better choice.">
+    <meta name="robots" content="max-image-preview:large">
+
+    <link rel="canonical" href="https://emailengine.app/unipile-alternative">
+    <link rel="icon" href="/images/emailengine-logo.png">
+    <link rel="apple-touch-icon" href="/images/emailengine-logo.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EmailEngine">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://emailengine.app/unipile-alternative">
+    <meta property="og:title" content="EmailEngine vs Unipile: A Self-Hosted Unipile Alternative">
+    <meta property="og:description" content="Email-only self-hosted vs multi-channel managed SaaS, flat annual pricing vs per-account billing, and where each one wins.">
+    <meta property="og:image" content="https://emailengine.app/images/og-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@emailengine">
+    <meta name="twitter:title" content="EmailEngine vs Unipile: A Self-Hosted Unipile Alternative">
+    <meta name="twitter:description" content="Email-only self-hosted vs multi-channel managed SaaS, flat annual pricing vs per-account billing, and where each one wins.">
+    <meta name="twitter:image" content="https://emailengine.app/images/og-cover.png">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,600&amp;display=fallback">
+
+    <script defer data-domain="emailengine.app" data-api="/a/e" src="/a/pv.js"></script>
+    <script defer src="https://postalsys.com/frame.js"></script>
+
+    <link rel="preload" href="https://postalsys.com/region.js" as="script">
+    <script>
+        (function () {
+            var KEY = 'psysRegion';
+            var applyPrices = function (data) {
+                var fmt = data.formatted;
+                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return; }
+                var local = data.currency === 'eur' ? fmt.eur : fmt.usd;
+                var spans = document.querySelectorAll('[data-price]');
+                for (var i = 0; i < spans.length; i++) {
+                    var key = spans[i].getAttribute('data-price');
+                    var text = key === 'local' ? local : fmt[key];
+                    if (typeof text === 'string') { spans[i].textContent = text; }
+                }
+            };
+            var apply = function (data) {
+                if (!data || typeof data !== 'object') { return; }
+                document.documentElement.classList.toggle('currency-eur', data.currency === 'eur');
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', function () { applyPrices(data); });
+                } else {
+                    applyPrices(data);
+                }
+            };
+            try {
+                var cached = JSON.parse(localStorage.getItem(KEY) || 'null');
+                if (cached && Date.now() - cached.ts < 7 * 864e5) { apply(cached.data); }
+            } catch (err) { /* corrupt cache: behave like a first visit */ }
+            var s = document.createElement('script');
+            s.src = 'https://postalsys.com/region.js';
+            s.onload = function () {
+                var data = window.PSYS_REGION;
+                if (!data) { return; }
+                apply(data);
+                try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (err) { /* storage full or denied */ }
+            };
+            document.head.appendChild(s);
+        })();
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://emailengine.app/unipile-alternative",
+        "url": "https://emailengine.app/unipile-alternative",
+        "name": "EmailEngine vs Unipile: A Self-Hosted Unipile Alternative",
+        "description": "EmailEngine and Unipile compared: email-only self-hosted vs multi-channel managed SaaS, flat annual pricing vs per-account billing.",
+        "about": { "@id": "https://emailengine.app/#software" },
+        "publisher": { "@id": "https://emailengine.app/#organization" },
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "EmailEngine", "item": "https://emailengine.app/" },
+                { "@type": "ListItem", "position": 2, "name": "Unipile alternative", "item": "https://emailengine.app/unipile-alternative" }
+            ]
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is EmailEngine a drop-in replacement for Unipile?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For the email part, the concepts map: accounts, messages, folders, sending, webhooks, all over REST, though endpoints and payloads differ. For everything else Unipile does (LinkedIn, WhatsApp, Instagram, Messenger, calendar), there is no EmailEngine equivalent to migrate to. Some teams run both: EmailEngine for deep email work, Unipile for the other channels." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does EmailEngine support LinkedIn or WhatsApp messaging?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. EmailEngine is email only, deliberately, and multi-channel support is not planned. If LinkedIn or WhatsApp integration is a requirement, Unipile is the right tool for that part of your product." }
+            },
+            {
+                "@type": "Question",
+                "name": "Unipile is EU-hosted. Isn't that enough for GDPR?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Often, yes. EU hosting with a DPA is a perfectly workable GDPR setup for many teams, and Unipile holds SOC 2 as well. The difference is structural: Unipile is still a third party holding full copies of your users' messages, so it is a sub-processor your DPO declares and assesses. EmailEngine runs on your own infrastructure and the mail never reaches us, so there is no sub-processor at all. If your policy says customer mail may not leave your network, only self-hosting satisfies it." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do the costs actually compare?",
+                "acceptedAnswer": { "@type": "Answer", "text": "As of mid-2026, Unipile starts at 49 EUR per month covering up to 10 connected accounts, then roughly 5 EUR per account per month with volume discounts, and each connected service counts separately. EmailEngine is 1,450 USD or 1,200 EUR per year, flat, for unlimited mailboxes, plus the server and Redis you run it on. The bills cross at about twenty connected accounts. Both pricing pages change; check them rather than this paragraph." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does a migration from Unipile involve?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Email accounts reconnect through EmailEngine's hosted authentication or the API, webhooks re-point to new payloads, and message data stays where it always was, in the mailboxes. Anything that is not email stays behind on Unipile. Plan a migration for the email portion, not a search-and-replace." }
+            }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="container site-header__bar">
+            <a class="site-header__logo" href="/"><img src="/images/emailengine-logo.png" width="80" height="80" alt="EmailEngine"></a>
+            <nav class="site-header__links">
+                <a href="https://learn.emailengine.app/">Documentation</a>
+                <a href="https://learn.emailengine.app/docs/api/emailengine-api">API Reference</a>
+                <a href="/#pricing">Pricing</a>
+                <a href="/#compare">Compare</a>
+                <a href="https://learn.emailengine.app/docs/support">Support</a>
+                <a href="https://blog.emailengine.app/">Blog</a>
+            </nav>
+            <a class="btn btn--primary site-header__cta" href="/#downloads">
+                Download
+                <svg width="1em" viewBox="0 0 15 12" xmlns="http://www.w3.org/2000/svg"><path d="M9.6 7H1a1 1 0 1 1 0-2h8.6L7 2.4A1 1 0 0 1 8.4 1l4.3 4.2c.2.3.3.5.3.8 0 .3-.1.5-.3.7L8.4 11A1 1 0 1 1 7 9.5L9.6 7z" fill="currentColor"/></svg>
+            </a>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-burger">Menu</label>
+            <nav class="mobile-menu">
+                <label for="nav-toggle" class="mobile-menu__backdrop"></label>
+                <ul class="mobile-menu__panel">
+                    <li><a href="https://learn.emailengine.app/">Documentation</a></li>
+                    <li><a href="https://learn.emailengine.app/docs/api/emailengine-api">API Reference</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/#compare">Compare</a></li>
+                    <li><a href="https://learn.emailengine.app/docs/support">Support</a></li>
+                    <li><a href="https://blog.emailengine.app/">Blog</a></li>
+                    <li><a href="/#downloads">Download
+                        <svg width="13" height="12" xmlns="http://www.w3.org/2000/svg"><path d="M9.557 7H1a1 1 0 1 1 0-2h8.586L7.007 2.421a1 1 0 0 1 1.414-1.414l4.243 4.243c.203.202.3.47.292.736a.997.997 0 0 1-.292.735L8.42 10.964A1 1 0 1 1 7.007 9.55L9.557 7z" fill="currentColor"/></svg>
+                    </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section page-title">
+        <div class="header-spacer"></div>
+        <div class="container">
+            <h1 class="section-title">A self-hosted alternative to Unipile</h1>
+            <p class="section-subtitle">EmailEngine and Unipile overlap on exactly one thing: connecting your users' mailboxes to your product. Around that overlap they are different tools: Unipile is a managed multi-channel service, EmailEngine is email-only software you run yourself. This page maps the fork honestly, because for part of what Unipile does, EmailEngine is not a candidate at all.</p>
+            <p class="cred">Built and maintained by the author of <strong>Nodemailer</strong>, the email library downloaded 16.7 million times a week. More than <strong>200 companies</strong> run EmailEngine in production across 38 countries.</p>
+        </div>
+    </section>
+
+    <section id="differences" class="section section--tight">
+        <div class="container">
+            <div class="cards">
+                <div class="card">
+                    <h3 class="card__title">One channel or many</h3>
+                    <p class="card__body">Unipile speaks email, LinkedIn, WhatsApp, Instagram, Messenger and calendar through one API. EmailEngine does email alone, and goes deeper at it: bounce classification, mail merge, server-side templates, deliverability testing. Need the other channels? That part of the decision is already made.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">Where the data lives</h3>
+                    <p class="card__body">Unipile syncs message copies into its EU cloud (Scaleway, France), well-placed for GDPR, but still a third party holding your users' messages. EmailEngine keeps only metadata in your own Redis and fetches content on demand, so the mail never leaves your network.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">How the bill scales</h3>
+                    <p class="card__body">Unipile bills per connected account per month, and every connected service counts as an account. EmailEngine is <span data-price="local">$1,450 or €1,200</span> a year, flat, however many mailboxes you connect. The bills cross at about twenty accounts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparison" class="section">
+        <div class="container">
+            <h2 class="section-title">Side by side</h2>
+            <div class="cmp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>EmailEngine</th>
+                            <th>Unipile</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Hosting</th>
+                            <td>Self-hosted on your infrastructure</td>
+                            <td>Managed SaaS, hosted in the EU (Scaleway, France)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Channels</th>
+                            <td>Email only</td>
+                            <td>Email, LinkedIn, WhatsApp, Instagram, Messenger, X, calendar</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Message storage</th>
+                            <td>Metadata only, in your own Redis; content fetched on demand</td>
+                            <td>Message copies synced into the Unipile cloud</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Pricing model</th>
+                            <td><span data-price="local">$1,450 / €1,200</span> a year, flat, unlimited mailboxes</td>
+                            <td>Per connected account per month, €49/month minimum</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Getting started</th>
+                            <td>A server, Redis and about ten minutes</td>
+                            <td>Instant sign-up, nothing to run</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email depth</th>
+                            <td>Bounce detection and suppression, mail merge, templates, deliverability testing</td>
+                            <td>Core send, read and webhook operations</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Conversation threading</th>
+                            <td>Native for Gmail, Microsoft Graph and Yahoo; build your own elsewhere</td>
+                            <td>Universal, managed in the Unipile cloud</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Calendar</th>
+                            <td>No calendar API; invites parsed out of messages</td>
+                            <td>Google and Outlook calendar sync and scheduling</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Compliance</th>
+                            <td>Inherited from your environment; no third party holds the mail</td>
+                            <td>SOC 2, GDPR with DPA, EU data residency</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Source code</th>
+                            <td>Source available, auditable by your security team</td>
+                            <td>Closed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="cmp__foot">The <a href="https://learn.emailengine.app/docs/comparison/emailengine-vs-unipile">feature-by-feature comparison</a> in the documentation goes deeper, and if it is Nylas you are weighing, <a href="/nylas-alternative">that comparison is here</a>.</p>
+            <div class="btn-row btn-row--center">
+                <a class="btn btn--primary btn--large" href="/#downloads">Download EmailEngine</a>
+                <a class="btn btn--large" href="/#pricing">See pricing</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="unipile-wins" class="section">
+        <div class="container">
+            <h2 class="section-title">Where Unipile is the stronger choice</h2>
+            <p class="section-subtitle section-subtitle--spaced">The first item is not a trade-off, it is a boundary: EmailEngine does not compete for it at all.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Anything beyond email</h3>
+                    <p class="feature__body">LinkedIn messaging including Recruiter and Sales Navigator, WhatsApp, Instagram, Messenger. If your product needs those channels, Unipile does them and EmailEngine never will.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Nothing to operate</h3>
+                    <p class="feature__body">No server, no Redis, no monitoring, no upgrades. A managed service is the honest recommendation for a team with no ops capacity.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Universal threading</h3>
+                    <p class="feature__body">Conversations are computed in the Unipile cloud for every provider. EmailEngine has native threading only where the provider offers it: Gmail, Microsoft Graph and Yahoo.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Calendar and scheduling</h3>
+                    <p class="feature__body">Google and Outlook calendar sync with scheduling built in. EmailEngine does email, and only email.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Managed EU compliance</h3>
+                    <p class="feature__body">SOC 2, a DPA, and data kept in France. If EU-resident SaaS with vendor-held certification is what your buyers ask for, that is exactly what Unipile sells.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Official SDKs</h3>
+                    <p class="feature__body">Maintained Node.js and PHP clients. EmailEngine gives you a documented REST API and an OpenAPI spec, and the rest is on you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="emailengine-wins" class="section section--ink">
+        <div class="container">
+            <h2 class="section-title">Where EmailEngine is the stronger choice</h2>
+            <p class="section-subtitle section-subtitle--spaced">If the job is email, depth beats breadth, and self-hosting answers questions a managed service cannot.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">The mail never leaves your network</h3>
+                    <p class="feature__body">EU hosting still means a third party holds your users' messages. With EmailEngine, message content is fetched on demand from the original mailbox and stored on nobody's cloud, ours included.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">No sub-processor to declare</h3>
+                    <p class="feature__body">Your users' mail never reaches us, so for that data we are neither controller nor processor under the GDPR. Nothing for your DPO to assess, no DPA to negotiate.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Deeper email machinery</h3>
+                    <p class="feature__body">Bounce parsing with ML-assisted classification, automatic suppression lists, mail merge, server-side templates, deliverability testing with SPF, DKIM and DMARC results. Email is the whole product, not one channel of many.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">The bill ignores your growth</h3>
+                    <p class="feature__body">Per-account pricing makes your integration vendor a percentage of your revenue. EmailEngine's flat fee costs the same at fifty mailboxes and at fifty thousand.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Ships inside your product</h3>
+                    <p class="feature__body">Software rather than a service: deploy it on-premises at customer sites, air-gapped if need be, with a perpetual licence so no renewal can take a fleet down. Unipile has no self-hosted option.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Auditable source</h3>
+                    <p class="feature__body">The full source code is available for your security team to read and build. A managed API is a black box by definition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing-math" class="section">
+        <div class="container">
+            <h2 class="section-title">Unipile pricing vs a flat fee</h2>
+            <p class="section-subtitle section-subtitle--spaced">Both vendors publish their prices. As of mid-2026, Unipile starts at €49 a month covering up to ten connected accounts, then about €5 per account per month with volume discounts as you grow, and each connected service counts separately, so one user on email plus LinkedIn is two accounts; <a href="https://www.unipile.com/pricing-api/" rel="nofollow">check the current rates</a>. EmailEngine is <a href="/#pricing"><span data-price="local">$1,450 or €1,200</span> a year</a>, flat, plus the server and Redis you run it on.</p>
+            <div class="cmp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Connected accounts</th>
+                            <th>Per-account billing, per year</th>
+                            <th>EmailEngine, per year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">25</th>
+                            <td>≈ €1,500</td>
+                            <td rowspan="3"><span data-price="local">$1,450 or €1,200</span> flat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">100</th>
+                            <td>≈ €5,400</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1,000</th>
+                            <td>≈ €48,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="cmp__foot">The bills cross at about twenty accounts, and every account after that widens the gap. What the per-account fee buys is real: the LinkedIn and WhatsApp integrations are genuinely hard to run, and if you need them, they are worth paying for. The comparison above is only about the email column.</p>
+        </div>
+    </section>
+
+    <section id="faq" class="section">
+        <div class="container">
+            <h2 class="section-title section-title--spaced">Questions people switching actually ask</h2>
+            <div class="faq">
+                <div class="faq-item">
+                    <h3>Is EmailEngine a drop-in replacement for Unipile?</h3>
+                    <p>For the email part, the concepts map: accounts, messages, folders, sending, webhooks, all over REST, though endpoints and payloads differ. For everything else Unipile does (LinkedIn, WhatsApp, Instagram, Messenger, calendar), there is no EmailEngine equivalent to migrate to. Some teams run both: EmailEngine for deep email work, Unipile for the other channels.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does EmailEngine support LinkedIn or WhatsApp messaging?</h3>
+                    <p>No. EmailEngine is email only, deliberately, and multi-channel support is not planned. If LinkedIn or WhatsApp integration is a requirement, Unipile is the right tool for that part of your product.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Unipile is EU-hosted. Isn't that enough for GDPR?</h3>
+                    <p>Often, yes. EU hosting with a DPA is a perfectly workable GDPR setup for many teams, and Unipile holds SOC 2 as well. The difference is structural: Unipile is still a third party holding full copies of your users' messages, so it is a sub-processor your DPO declares and assesses. EmailEngine runs on your own infrastructure and <a href="https://learn.emailengine.app/docs/deployment/encryption">the mail never reaches us</a>, so there is no sub-processor at all. If your policy says customer mail may not leave your network, only self-hosting satisfies it.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do the costs actually compare?</h3>
+                    <p>As of mid-2026, Unipile starts at €49 a month covering up to 10 connected accounts, then roughly €5 per account per month with volume discounts, and each connected service counts separately. EmailEngine is <span data-price="local">$1,450 or €1,200</span> a year, flat, for unlimited mailboxes, plus the server and Redis you run it on. The bills cross at about twenty connected accounts. Both pricing pages change; check them rather than this paragraph.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What does a migration from Unipile involve?</h3>
+                    <p>Email accounts reconnect through EmailEngine's <a href="https://learn.emailengine.app/docs/accounts/hosted-authentication">hosted authentication</a> or the API, webhooks re-point to new payloads, and message data stays where it always was, in the mailboxes. Anything that is not email stays behind on Unipile. Plan a migration for the email portion, not a search-and-replace.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="next" class="section section--blue section--cta">
+        <div class="container">
+            <div class="cta-titles">
+                <h2 class="section-title">Try the email column for yourself</h2>
+                <p class="section-subtitle">Download EmailEngine, start a 14-day trial from your own dashboard, and connect a real mailbox. No sign-up, no credit card, no sales call.</p>
+            </div>
+            <div class="btn-row">
+                <a class="btn btn--large" href="/#downloads">Download EmailEngine</a>
+                <a class="btn btn--large" href="/#pricing">See pricing</a>
+                <a class="btn btn--large" href="https://learn.emailengine.app/docs/api/emailengine-api">Read the API reference</a>
+            </div>
+        </div>
+        <div class="wave"><svg viewBox="0 0 1695 57" preserveAspectRatio="none"><path d="M0 23c135.4 19 289.6 28.5 462.5 28.5C721.9 51.5 936.7 1 1212.2 1 1395.8.9 1556.7 8.3 1695 23v34H0V23z" fill="#fff" fill-rule="evenodd"/></svg></div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-nav">
+                <div>
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="/#downloads">Download</a></li>
+                        <li><a href="/#pricing">Pricing</a></li>
+                        <li><a href="/#compare">Compare</a></li>
+                        <li><a href="/security">Security</a></li>
+                        <li><a href="/nylas-alternative">Nylas alternative</a></li>
+                        <li><a href="/unipile-alternative">Unipile alternative</a></li>
+                        <li><a href="https://blog.emailengine.app/">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="https://learn.emailengine.app/docs/installation">Installation</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/api/emailengine-api">API reference</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/webhooks/overview">Webhooks</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/oauth2-setup">OAuth2 setup</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Guides</h4>
+                    <ul>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/gmail/gmail-imap">Gmail</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/microsoft-365/outlook-365">Microsoft 365</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/sending/basic-sending">Sending mail</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/integrations/low-code">Low-code integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/support">Support</a></li>
+                        <li><a href="https://github.com/postalsys/emailengine">GitHub</a></li>
+                        <li><a href="mailto:info@emailengine.app">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="site-footer__inner">
+                <div class="site-footer__meta">
+                    <span>© 2021-2026 Postal Systems OÜ</span>
+                    <nav class="site-footer__links">
+                        <a href="https://postalsys.com/tos">Terms of Service</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="https://emailengine.dev/license.html">EmailEngine License</a>
+                    </nav>
+                </div>
+                <ul class="site-footer__social">
+                    <li><a href="https://twitter.com/emailengine" target="_blank" rel="noreferrer noopener" aria-label="EmailEngine on X">
+                        <svg width="26" height="26" viewBox="0 0 378 387" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M221.181 174.003L345.147 33H315.771L208.13 155.431L122.159 33H23L153.006 218.137L23 366H52.3775L166.048 236.709L256.841 366H356L221.173 174.003H221.18H221.181ZM180.943 219.768L167.771 201.332L62.9633 54.6399H108.086L192.667 173.026L205.839 191.462L315.785 345.345H270.662L180.943 219.775V219.768Z" fill="currentColor"/></svg>
+                    </a></li>
+                    <li><a href="https://github.com/postalsys/emailengine" target="_blank" rel="noreferrer noopener" aria-label="EmailEngine on GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" fill="currentColor"/></svg>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

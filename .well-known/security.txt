@@ -1,0 +1,27 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Contact: https://github.com/postalsys/emailengine/security/advisories/new
+Contact: mailto:andris@postalsys.com
+Expires: 2027-06-01T00:00:00.000Z
+Encryption: https://keys.openpgp.org/vks/v1/by-fingerprint/5D952A46E1D8C931F6364E01DC6C83F4D584D364
+Preferred-Languages: en, et
+Canonical: https://emailengine.app/.well-known/security.txt
+Policy: https://github.com/postalsys/emailengine/blob/master/SECURITY.md
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAEBCAA5FiEEXZUqRuHYyTH2Nk4B3GyD9NWE02QFAmpppTMbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMCwzAAoJENxsg/TVhNNkvWcP/A7XvJuTsOI9r0i1XmZl
+QSw1J6+KtHLTUiNnORhK/XLpi6E1Adfct6Cu7+ibdCaAzKaksNkdzrOIL4uHQ+Xk
++EP2llaOcISD/8XHDy3LrwdGEtwg0uba8guD8rUQKxzSXjsP//Y5Jigak2m9Od0s
+HKpR+hts6dYCFEj30qJi/QXhtPBsYIumBp4VxZ+VyxRU0I26rgIdNKN50d8wXVpw
+hz3f4hFajY8mOxWX9NGQQQMMndNU6hx6P1X5kIDWEYeqz6nS28QMvZYE3uAgVcOp
+/bxpekT8q8o8xS6XDCF0K1SKVZ9k6xuGmnwoJEWoS2FGONeBerrirsj5q0GdvDl9
+r1DEfFkrrrQqHnRGTIm5XpciA4lk7R32wKtn2RbCksc0gVPCLnoHfkAlXh35siyy
+Ax7N6AmjpgPg/0fju//sg3hxQw2DJoMBcyqhl9PnAboJye3TJlFBXvwJzYM+HcSq
+6arwJdCL0vDgyRxNeecVa7Q00ofyBE7VyUb9c7PWUQbe+ca1mD+nLybmq+axS+Xq
+mTeIH1Fy4vFfsqqQIXCYeGNWv4jgpxhoezmt+HcapN+Rkq0HQJPHJ3r+w548HsAp
+LQe5Otkk56ol+rBrGOeexdE5GcUXMDxc+IgVSqjTOkvxr8yJ+weSLU2H0bEfDIm5
+rTWabglJpDs+TgYhSn2CbGJt
+=nmmD
+-----END PGP SIGNATURE-----

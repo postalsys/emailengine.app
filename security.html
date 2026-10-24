@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>EmailEngine Security: Encryption, Data Handling and Disclosure</title>
+    <meta name="description" content="How EmailEngine protects mailbox credentials: AES-256-GCM encryption at rest, API tokens stored only as hashes, SSO and passkeys, a complete list of what ever leaves your network, and how to report a vulnerability.">
+    <meta name="robots" content="max-image-preview:large">
+
+    <link rel="canonical" href="https://emailengine.app/security">
+    <link rel="icon" href="/images/emailengine-logo.png">
+    <link rel="apple-touch-icon" href="/images/emailengine-logo.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EmailEngine">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://emailengine.app/security">
+    <meta property="og:title" content="EmailEngine Security: Encryption, Data Handling and Disclosure">
+    <meta property="og:description" content="What is stored and where, what is encrypted and with what, what ever leaves your network, and how to report a vulnerability.">
+    <meta property="og:image" content="https://emailengine.app/images/og-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@emailengine">
+    <meta name="twitter:title" content="EmailEngine Security: Encryption, Data Handling and Disclosure">
+    <meta name="twitter:description" content="What is stored and where, what is encrypted and with what, what ever leaves your network, and how to report a vulnerability.">
+    <meta name="twitter:image" content="https://emailengine.app/images/og-cover.png">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,600&amp;display=fallback">
+
+    <script defer data-domain="emailengine.app" data-api="/a/e" src="/a/pv.js"></script>
+    <script defer src="https://postalsys.com/frame.js"></script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://emailengine.app/security",
+        "url": "https://emailengine.app/security",
+        "name": "EmailEngine Security: Encryption, Data Handling and Disclosure",
+        "description": "How EmailEngine protects mailbox credentials: AES-256-GCM encryption at rest, API tokens stored only as hashes, SSO and passkeys, a complete list of what ever leaves your network, and how to report a vulnerability.",
+        "about": { "@id": "https://emailengine.app/#software" },
+        "publisher": { "@id": "https://emailengine.app/#organization" },
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "EmailEngine", "item": "https://emailengine.app/" },
+                { "@type": "ListItem", "position": 2, "name": "Security", "item": "https://emailengine.app/security" }
+            ]
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Does EmailEngine come with SOC 2 or ISO 27001?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. EmailEngine is software you run, so it inherits the compliance posture of your own environment rather than carrying certifications of its own. If your environment is certified, EmailEngine adds no third party to assess, because your users' mail never reaches us. If your buyers require the email vendor itself to hold the certificate, a hosted API is the better fit." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is encryption at rest on by default?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Only once you set a secret. Field-level encryption of credentials and tokens activates when the EENGINE_SECRET encryption key is configured; without it, stored values are not encrypted. Setting it is the first item in the deployment security checklist, and a built-in CLI re-encrypts existing data when you add or rotate the key." }
+            },
+            {
+                "@type": "Question",
+                "name": "Who sets security headers like CSP and HSTS?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your reverse proxy. EmailEngine binds to localhost by default and is designed to run behind Caddy, nginx or a similar proxy that terminates TLS and adds security headers; the documentation ships ready-made configurations for both. The application does not emit CSP or HSTS headers itself." }
+            },
+            {
+                "@type": "Question",
+                "name": "How isolated are custom webhook functions?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Webhook filter and transform functions run in an isolated execution context with a restricted set of globals and an enforced timeout, and only administrators can author them. This is an isolation mechanism, not a hardened security sandbox: treat script authoring as an admin-level privilege and never expose it to untrusted users." }
+            },
+            {
+                "@type": "Question",
+                "name": "Has EmailEngine been independently audited?",
+                "acceptedAnswer": { "@type": "Answer", "text": "There is no published third-party audit report. The full source is available, so your security team can review the code directly rather than taking a summary on trust, and vulnerabilities are handled through a private disclosure process with published advisories." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which versions receive security fixes?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The latest release only. Fixes are not backported to older versions; upgrading to the current release line is the supported way to receive security updates. EmailEngine ships a release every few days, so staying current is the normal operating mode." }
+            }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="container site-header__bar">
+            <a class="site-header__logo" href="/"><img src="/images/emailengine-logo.png" width="80" height="80" alt="EmailEngine"></a>
+            <nav class="site-header__links">
+                <a href="https://learn.emailengine.app/">Documentation</a>
+                <a href="https://learn.emailengine.app/docs/api/emailengine-api">API Reference</a>
+                <a href="/#pricing">Pricing</a>
+                <a href="/#compare">Compare</a>
+                <a href="https://learn.emailengine.app/docs/support">Support</a>
+                <a href="https://blog.emailengine.app/">Blog</a>
+            </nav>
+            <a class="btn btn--primary site-header__cta" href="/#downloads">
+                Download
+                <svg width="1em" viewBox="0 0 15 12" xmlns="http://www.w3.org/2000/svg"><path d="M9.6 7H1a1 1 0 1 1 0-2h8.6L7 2.4A1 1 0 0 1 8.4 1l4.3 4.2c.2.3.3.5.3.8 0 .3-.1.5-.3.7L8.4 11A1 1 0 1 1 7 9.5L9.6 7z" fill="currentColor"/></svg>
+            </a>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-burger">Menu</label>
+            <nav class="mobile-menu">
+                <label for="nav-toggle" class="mobile-menu__backdrop"></label>
+                <ul class="mobile-menu__panel">
+                    <li><a href="https://learn.emailengine.app/">Documentation</a></li>
+                    <li><a href="https://learn.emailengine.app/docs/api/emailengine-api">API Reference</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/#compare">Compare</a></li>
+                    <li><a href="https://learn.emailengine.app/docs/support">Support</a></li>
+                    <li><a href="https://blog.emailengine.app/">Blog</a></li>
+                    <li><a href="/#downloads">Download
+                        <svg width="13" height="12" xmlns="http://www.w3.org/2000/svg"><path d="M9.557 7H1a1 1 0 1 1 0-2h8.586L7.007 2.421a1 1 0 0 1 1.414-1.414l4.243 4.243c.203.202.3.47.292.736a.997.997 0 0 1-.292.735L8.42 10.964A1 1 0 1 1 7.007 9.55L9.557 7z" fill="currentColor"/></svg>
+                    </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section page-title">
+        <div class="header-spacer"></div>
+        <div class="container">
+            <h1 class="section-title">Security</h1>
+            <p class="section-subtitle">EmailEngine holds your users' mailbox credentials, so you are owed specifics rather than assurances. This page covers what is stored and where, what is encrypted and with what, everything that ever leaves your network, and how to report a problem. The <a href="https://github.com/postalsys/emailengine">source is available</a>, so every claim here is one your security team can check.</p>
+        </div>
+    </section>
+
+    <section id="model" class="section section--tight">
+        <div class="container">
+            <div class="cards">
+                <div class="card">
+                    <h3 class="card__title">The architecture is the control</h3>
+                    <p class="card__body">EmailEngine runs on your infrastructure. Message content is fetched on demand from the original mailbox and never copied to anyone else's servers, ours included. The strongest security property is the one that needs no policy: your users' mail has nowhere else to go.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">The smallest useful footprint</h3>
+                    <p class="card__body">What EmailEngine keeps is a sync index: message IDs, flags and folder structure, in your own Redis. There is no message archive, no attachment store and no webhook delivery log to protect, because none of them exist.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">No vendor path in</h3>
+                    <p class="card__body">There is no remote management channel and no backdoor. The only inbound signal EmailEngine accepts from us is the licence validation response, which can invalidate a licence and nothing else: it cannot push code, change configuration or read data. We cannot reach your instance even if you ask us to.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="data" class="section">
+        <div class="container">
+            <h2 class="section-title">What lives in your Redis, and what never does</h2>
+            <div class="cmp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Where it lives</th>
+                            <th>Protection</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Mailbox passwords, OAuth2 access and refresh tokens</th>
+                            <td>Your Redis</td>
+                            <td>Encrypted with AES-256-GCM</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">OAuth2 client secrets, service keys, TOTP seeds</th>
+                            <td>Your Redis</td>
+                            <td>Encrypted with AES-256-GCM</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">API access tokens</th>
+                            <td>Your Redis</td>
+                            <td>Only the SHA-256 hash; the token itself is shown once and never stored</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Message index: IDs, flags, labels, folder structure</th>
+                            <td>Your Redis</td>
+                            <td>Metadata only, no content</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Queued sends and webhook deliveries</th>
+                            <td>Your Redis</td>
+                            <td>Transient; discarded once completed or permanently failed</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Message bodies, attachments, full headers</th>
+                            <td>Nowhere</td>
+                            <td>Fetched on demand from the original mailbox, never stored</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Sent-mail archive, webhook history</th>
+                            <td>Nowhere</td>
+                            <td>Not kept; EmailEngine is a gateway, not a datastore</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="cmp__foot">Mailbox exports, when you request them, are written as chunked AES-256-GCM streams with owner-only file permissions. The full inventory, including the optional features that change it, is in the <a href="https://learn.emailengine.app/docs/deployment/compliance">compliance documentation</a>.</p>
+        </div>
+    </section>
+
+    <section id="encryption" class="section">
+        <div class="container">
+            <h2 class="section-title">Encryption</h2>
+            <p class="section-subtitle section-subtitle--spaced">Field-level encryption for everything that could log into a mailbox, with a key that never leaves your side.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">AES-256-GCM at rest</h3>
+                    <p class="feature__body">Every stored credential, OAuth2 token and secret is encrypted with AES-256-GCM: a fresh random IV and salt per value, an authentication tag checked on every read, and a 256-bit key derived with scrypt.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Your key, your key store</h3>
+                    <p class="feature__body">The encryption key comes from the <code>EENGINE_SECRET</code> environment variable, or from a file path for Docker, Kubernetes and Vault-style secret managers. It is never written to Redis and never sent anywhere.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Rotation is built in</h3>
+                    <p class="feature__body">A CLI command re-encrypts all stored data under a new key, and accepts multiple previous keys in one pass, so rotating generations of secrets is an operation rather than a project.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Encrypted exports</h3>
+                    <p class="feature__body">Mailbox exports are gzip-compressed, then encrypted as chunked AES-256-GCM streams with a per-chunk IV and authentication tag, written with owner-only permissions.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">TLS to every mail server</h3>
+                    <p class="feature__body">Certificates are validated by default; accepting invalid ones is a deliberate, per-deployment opt-in that the schema itself labels as not for production. The TLS version and cipher floors default to maximum mailbox compatibility and can be raised by environment variable.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Sealed admin sessions</h3>
+                    <p class="feature__body">Admin sessions use an authenticated, encrypted cookie with SameSite set, and every session is invalidated the moment the password changes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="access" class="section">
+        <div class="container">
+            <h2 class="section-title">Authentication and access control</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Tokens that cannot leak from storage</h3>
+                    <p class="feature__body">An API token is 32 random bytes, shown once at creation. EmailEngine stores only its SHA-256 hash, so no dump of Redis can recover a working token.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Least-privilege tokens</h3>
+                    <p class="feature__body">Tokens can be limited to one account, one scope, an IP or CIDR allowlist, specific HTTP referrers and a per-token rate limit, so the credential in your least-trusted integration carries the smallest possible blast radius.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Modern password hashing</h3>
+                    <p class="feature__body">Admin passwords are hashed with PBKDF2-SHA256 at 600,000 iterations, in line with current OWASP guidance, with per-IP and per-username rate limits on the login form.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Two-factor and passkeys</h3>
+                    <p class="feature__body">TOTP two-factor authentication with a replay guard that burns each code after use, and WebAuthn passkeys with single-use, short-lived challenges. A password change revokes every passkey.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Single sign-on</h3>
+                    <p class="feature__body">OpenID Connect against any provider using the authorization code flow with PKCE, plus an SSO-only mode that disables local logins entirely. Okta is supported as a dedicated integration.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Authorisation that revokes instantly</h3>
+                    <p class="feature__body">SSO access can be allow-listed by email, domain or IdP group, and the lists are re-evaluated on every request rather than at login, so removing someone takes effect immediately instead of when their cookie expires.</p>
+                </div>
+            </div>
+            <p class="cmp__foot">The dashboard can additionally be restricted to an admin IP allowlist, and unverified IdP email addresses are refused even when they match an allow-list. Details in the <a href="https://learn.emailengine.app/docs/deployment/security">security documentation</a>.</p>
+        </div>
+    </section>
+
+    <section id="audit" class="section">
+        <div class="container">
+            <h2 class="section-title">An audit trail your SIEM can drink from</h2>
+            <p class="section-subtitle section-subtitle--spaced">Everything is structured JSON on standard output, ready for whatever log pipeline you already run.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Every authentication event</h3>
+                    <p class="feature__body">Successful and failed logins, TOTP attempts and replays, passkey registrations, deletions and each distinct failure reason, logouts and rate-limit hits, all with the acting user and remote address.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Token lifecycle</h3>
+                    <p class="feature__body">Creating and deleting access tokens is logged with the token's hash and its restriction metadata, so you can reconstruct who could access what, and when that changed.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Redaction by default</h3>
+                    <p class="feature__body">Authorization headers, cookies and raw network packets are redacted from logs, and settings values that decrypt are deliberately kept out of error messages.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Protocol-level evidence</h3>
+                    <p class="feature__body">Per-account IMAP protocol logging can be switched on while you investigate an incident, then downloaded as a transcript of exactly what the mail server said.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="network" class="section section--ink">
+        <div class="container">
+            <h2 class="section-title">Everything that ever leaves your network</h2>
+            <p class="section-subtitle section-subtitle--spaced">This is the complete list, from the source code, of what EmailEngine sends anywhere other than your own mail servers and webhook endpoints. It is short enough to read, which is the point.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Licence validation</h3>
+                    <p class="feature__body">At most once per 24 hours, subscription licences check in with the licence key, the EmailEngine version, the application name and an instance identifier. If the check cannot be made, a 28-day grace period keeps your instance running. Perpetual licences never make this call at all: they verify offline, so neither the validation request nor the digest below exists for them.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">An anonymised feature digest</h3>
+                    <p class="feature__body">Alongside validation, an optional digest reports which features are enabled and coarse order-of-magnitude buckets rather than raw counts. It never contains addresses, URLs, credentials or message data, and <code>EENGINE_BEACON_DISABLED</code> turns it off.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Update check</h3>
+                    <p class="feature__body">A periodic request to the GitHub releases API drives the "update available" notice in the dashboard. It sends a user-agent string and nothing else, and <code>EENGINE_UPDATE_CHECK_DISABLED</code> turns it off. With that flag and a perpetual licence, an instance makes no background network calls at all.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Only when you click</h3>
+                    <p class="feature__body">Deliverability tests, IMAP settings autodiscovery and Let's Encrypt certificate issuance each contact their respective services, and each happens only on an explicit action or opt-in, never in the background.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Error reporting is opt-in</h3>
+                    <p class="feature__body">Sentry error reporting is off until you enable it, and you can point it at your own self-hosted Sentry instead of ours.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">And nothing else</h3>
+                    <p class="feature__body">No telemetry beyond the digest above, no analytics, no content ever. The source is available, so this claim is verifiable rather than contractual: grep it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="webhooks" class="section">
+        <div class="container">
+            <h2 class="section-title">Webhooks built for zero-trust receivers</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Signed payloads</h3>
+                    <p class="feature__body">Every delivery carries an HMAC-SHA256 signature over the exact request body, so your endpoint can verify that the event came from your instance and was not altered in flight.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Deduplication built in</h3>
+                    <p class="feature__body">A stable event ID and attempt counter accompany every delivery, so retried webhooks are recognised rather than double-processed.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">SSRF-filtered targets</h3>
+                    <p class="feature__body">Webhook destinations are checked against an egress policy that blocks cloud metadata endpoints by default and can block all private address space. Redirects are not followed, so an allowed host cannot bounce a request to a blocked one.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="supply-chain" class="section">
+        <div class="container">
+            <h2 class="section-title">Supply chain</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">An SBOM your instance serves</h3>
+                    <p class="feature__body">Every install ships its SPDX software bill of materials and serves it at <code>/sbom.json</code>, so your instance can hand your auditor its own dependency inventory.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">npm provenance</h3>
+                    <p class="feature__body">The npm package is published with a provenance attestation, giving a publicly verifiable link from the package on the registry back to the exact source and build that produced it.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">A hardened container image</h3>
+                    <p class="feature__body">The Docker image builds from a digest-pinned Node base, runs as a non-root user with a proper init process, and installs exact-pinned production dependencies from the lockfile.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Pinned, curated dependencies</h3>
+                    <p class="feature__body">Every dependency version is pinned exactly, and updates are batched, reviewed and tested against supported Node versions rather than merged automatically.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Licence compliance in CI</h3>
+                    <p class="feature__body">Every push runs a dependency licence check that fails the build on a disallowed licence, and the resulting inventory is served by your instance at <code>/licenses.html</code>.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Current runtime</h3>
+                    <p class="feature__body">EmailEngine supports Node.js 20 and later, prebuilt binaries bundle a current Node runtime, and Redis is the only other moving part.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section section--blue">
+        <div class="container">
+            <h2 class="section-title section-title--spaced">Straight answers</h2>
+            <div class="faq">
+                <div class="faq-item">
+                    <h3>Does EmailEngine come with SOC 2 or ISO 27001?</h3>
+                    <p>No. EmailEngine is software you run, so it inherits the compliance posture of your own environment rather than carrying certifications of its own. If your environment is certified, EmailEngine adds no third party to assess, because your users' mail never reaches us. If your buyers require the email vendor itself to hold the certificate, a hosted API is <a href="/nylas-alternative">the better fit</a>.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is encryption at rest on by default?</h3>
+                    <p>Only once you set a secret. Field-level encryption of credentials and tokens activates when the <code>EENGINE_SECRET</code> encryption key is configured; without it, stored values are not encrypted. Setting it is the first item in the <a href="https://learn.emailengine.app/docs/deployment/security">deployment security checklist</a>, and a built-in CLI re-encrypts existing data when you add or rotate the key.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Who sets security headers like CSP and HSTS?</h3>
+                    <p>Your reverse proxy. EmailEngine binds to localhost by default and is designed to run behind Caddy, nginx or a similar proxy that terminates TLS and adds security headers; the documentation ships <a href="https://learn.emailengine.app/docs/deployment/nginx-proxy">ready-made configurations</a>. The application does not emit CSP or HSTS headers itself.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How isolated are custom webhook functions?</h3>
+                    <p>Webhook filter and transform functions run in an isolated execution context with a restricted set of globals and an enforced timeout, and only administrators can author them. This is an isolation mechanism, not a hardened security sandbox: treat script authoring as an admin-level privilege and never expose it to untrusted users. The <a href="https://learn.emailengine.app/docs/webhooks/pre-processing">documentation says the same thing</a>, in the same words.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Has EmailEngine been independently audited?</h3>
+                    <p>There is no published third-party audit report. The full source is available, so your security team can review the code directly rather than taking a summary on trust, and vulnerabilities are handled through a private disclosure process with published advisories.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Which versions receive security fixes?</h3>
+                    <p>The latest release only. Fixes are not backported; upgrading to the current release line is the supported way to receive security updates. EmailEngine <a href="https://github.com/postalsys/emailengine/releases">ships a release every few days</a>, so staying current is the normal operating mode.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="disclosure" class="section">
+        <div class="container">
+            <h2 class="section-title">Reporting a vulnerability</h2>
+            <p class="section-subtitle section-subtitle--spaced">Please report privately rather than in a public issue. Reports go to the person who wrote the code, and reporters who want credit are named in the advisory.</p>
+            <div class="cards">
+                <div class="card">
+                    <h3 class="card__title">GitHub Security Advisories</h3>
+                    <p class="card__body">The preferred channel: open a <a href="https://github.com/postalsys/emailengine/security/advisories/new">private report on GitHub</a>. The discussion stays private until a fix ships, and accepted issues are disclosed as published advisories.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">Email, PGP if you need it</h3>
+                    <p class="card__body">Send details to <a href="mailto:andris@postalsys.com">andris@postalsys.com</a>, encrypted with <a href="https://keys.openpgp.org/vks/v1/by-fingerprint/5D952A46E1D8C931F6364E01DC6C83F4D584D364">the published PGP key</a> if the report is sensitive. A signed <a href="/.well-known/security.txt">security.txt</a> carries the same contacts.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">Scope, in writing</h3>
+                    <p class="card__body">The <a href="https://github.com/postalsys/emailengine/blob/master/SECURITY.md">security policy</a> lists what is in scope (API and admin authentication, OAuth2 handling, credential encryption, the proxy servers, webhook delivery, exports) and what is not, so you know before you start digging.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="next" class="section section--blue section--cta">
+        <div class="container">
+            <div class="cta-titles">
+                <h2 class="section-title">Audit it yourself</h2>
+                <p class="section-subtitle">The strongest claim on this page is that none of it has to be taken on trust. Read the source, then run the trial on your own hardware.</p>
+            </div>
+            <div class="btn-row">
+                <a class="btn btn--large" href="https://github.com/postalsys/emailengine">Read the source</a>
+                <a class="btn btn--large" href="https://learn.emailengine.app/docs/deployment/security">Security documentation</a>
+                <a class="btn btn--large" href="/#downloads">Download EmailEngine</a>
+            </div>
+        </div>
+        <div class="wave"><svg viewBox="0 0 1695 57" preserveAspectRatio="none"><path d="M0 23c135.4 19 289.6 28.5 462.5 28.5C721.9 51.5 936.7 1 1212.2 1 1395.8.9 1556.7 8.3 1695 23v34H0V23z" fill="#fff" fill-rule="evenodd"/></svg></div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-nav">
+                <div>
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="/#downloads">Download</a></li>
+                        <li><a href="/#pricing">Pricing</a></li>
+                        <li><a href="/#compare">Compare</a></li>
+                        <li><a href="/security">Security</a></li>
+                        <li><a href="/nylas-alternative">Nylas alternative</a></li>
+                        <li><a href="/unipile-alternative">Unipile alternative</a></li>
+                        <li><a href="https://blog.emailengine.app/">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="https://learn.emailengine.app/docs/installation">Installation</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/api/emailengine-api">API reference</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/webhooks/overview">Webhooks</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/oauth2-setup">OAuth2 setup</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Guides</h4>
+                    <ul>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/gmail/gmail-imap">Gmail</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/microsoft-365/outlook-365">Microsoft 365</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/sending/basic-sending">Sending mail</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/integrations/low-code">Low-code integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/support">Support</a></li>
+                        <li><a href="https://github.com/postalsys/emailengine">GitHub</a></li>
+                        <li><a href="mailto:info@emailengine.app">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="site-footer__inner">
+                <div class="site-footer__meta">
+                    <span>© 2021-2026 Postal Systems OÜ</span>
+                    <nav class="site-footer__links">
+                        <a href="https://postalsys.com/tos">Terms of Service</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="https://emailengine.dev/license.html">EmailEngine License</a>
+                    </nav>
+                </div>
+                <ul class="site-footer__social">
+                    <li><a href="https://twitter.com/emailengine" target="_blank" rel="noreferrer noopener" aria-label="EmailEngine on X">
+                        <svg width="26" height="26" viewBox="0 0 378 387" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M221.181 174.003L345.147 33H315.771L208.13 155.431L122.159 33H23L153.006 218.137L23 366H52.3775L166.048 236.709L256.841 366H356L221.173 174.003H221.18H221.181ZM180.943 219.768L167.771 201.332L62.9633 54.6399H108.086L192.667 173.026L205.839 191.462L315.785 345.345H270.662L180.943 219.775V219.768Z" fill="currentColor"/></svg>
+                    </a></li>
+                    <li><a href="https://github.com/postalsys/emailengine" target="_blank" rel="noreferrer noopener" aria-label="EmailEngine on GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" fill="currentColor"/></svg>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

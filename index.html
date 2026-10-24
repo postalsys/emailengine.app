@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>EmailEngine: Self-Hosted Email API for IMAP, Gmail and Microsoft 365</title>
+    <meta name="description" content="Read, send and sync Gmail, Outlook and IMAP email through one self-hosted REST API. Unlimited mailboxes, flat annual pricing. Try EmailEngine free for 14 days.">
+    <meta name="robots" content="max-image-preview:large">
+
+    <link rel="canonical" href="https://emailengine.app/">
+    <link rel="icon" href="/images/emailengine-logo.png">
+    <link rel="apple-touch-icon" href="/images/emailengine-logo.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EmailEngine">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://emailengine.app/">
+    <meta property="og:title" content="EmailEngine: Self-Hosted Email API for IMAP, Gmail and Microsoft 365">
+    <meta property="og:description" content="Read, send and sync Gmail, Outlook and IMAP email with one self-hosted REST API. Unlimited mailboxes, flat annual pricing, free 14-day trial.">
+    <meta property="og:image" content="https://emailengine.app/images/og-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@emailengine">
+    <meta name="twitter:title" content="EmailEngine: Self-Hosted Email API for IMAP, Gmail and Microsoft 365">
+    <meta name="twitter:description" content="Read, send and sync Gmail, Outlook and IMAP email with one self-hosted REST API. Unlimited mailboxes, flat annual pricing, free 14-day trial.">
+    <meta name="twitter:image" content="https://emailengine.app/images/og-cover.png">
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,600&amp;display=fallback">
+
+    <script async src="https://widget.senja.io/embed/frame.js"></script>
+
+    <script defer data-domain="emailengine.app" data-api="/a/e" src="/a/pv.js"></script>
+    <script defer src="https://postalsys.com/frame.js"></script>
+
+    <link rel="preload" href="https://postalsys.com/region.js" as="script">
+    <script>
+        (function () {
+            var KEY = 'psysRegion';
+            var applyPrices = function (data) {
+                var fmt = data.formatted;
+                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return; }
+                var local = data.currency === 'eur' ? fmt.eur : fmt.usd;
+                var spans = document.querySelectorAll('[data-price]');
+                for (var i = 0; i < spans.length; i++) {
+                    var key = spans[i].getAttribute('data-price');
+                    var text = key === 'local' ? local : fmt[key];
+                    if (typeof text === 'string') { spans[i].textContent = text; }
+                }
+            };
+            var apply = function (data) {
+                if (!data || typeof data !== 'object') { return; }
+                document.documentElement.classList.toggle('currency-eur', data.currency === 'eur');
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', function () { applyPrices(data); });
+                } else {
+                    applyPrices(data);
+                }
+            };
+            try {
+                var cached = JSON.parse(localStorage.getItem(KEY) || 'null');
+                if (cached && Date.now() - cached.ts < 7 * 864e5) { apply(cached.data); }
+            } catch (err) { /* corrupt cache: behave like a first visit */ }
+            var s = document.createElement('script');
+            s.src = 'https://postalsys.com/region.js';
+            s.onload = function () {
+                var data = window.PSYS_REGION;
+                if (!data) { return; }
+                apply(data);
+                try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (err) { /* storage full or denied */ }
+            };
+            document.head.appendChild(s);
+        })();
+    </script>
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://emailengine.app/#organization",
+    "name": "Postal Systems OÜ",
+    "alternateName": "EmailEngine",
+    "url": "https://postalsys.com",
+    "logo": "https://emailengine.app/images/emailengine-logo.png",
+    "email": "info@emailengine.app",
+    "foundingLocation": {
+        "@type": "Place",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Narva mnt 5",
+            "postalCode": "10117",
+            "addressLocality": "Tallinn",
+            "addressCountry": "EE"
+        }
+    },
+    "sameAs": [
+        "https://github.com/postalsys",
+        "https://github.com/postalsys/emailengine",
+        "https://twitter.com/emailengine",
+        "https://nodemailer.com",
+        "https://blog.emailengine.app",
+        "https://learn.emailengine.app"
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": "https://emailengine.app/#software",
+    "name": "EmailEngine",
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Email API",
+    "operatingSystem": "Linux, macOS, Windows, Docker",
+    "description": "Self-hosted email integration software providing a unified REST API over IMAP, SMTP, Gmail API and Microsoft Graph.",
+    "url": "https://emailengine.app/",
+    "license": "https://emailengine.dev/license.html",
+    "downloadUrl": "https://emailengine.app/#downloads",
+    "softwareHelp": "https://learn.emailengine.app/",
+    "author": {
+        "@id": "https://emailengine.app/#organization"
+    },
+    "publisher": {
+        "@id": "https://emailengine.app/#organization"
+    },
+    "offers": [
+        {
+            "@type": "Offer",
+            "price": "1450",
+            "priceCurrency": "USD",
+            "url": "https://postalsys.com/plans",
+            "availability": "https://schema.org/InStock",
+            "description": "Annual subscription. Unlimited instances, unlimited connected mailboxes."
+        },
+        {
+            "@type": "Offer",
+            "price": "1200",
+            "priceCurrency": "EUR",
+            "url": "https://postalsys.com/plans",
+            "availability": "https://schema.org/InStock",
+            "description": "Annual subscription. Unlimited instances, unlimited connected mailboxes."
+        }
+    ],
+    "sameAs": [
+        "https://github.com/postalsys/emailengine"
+    ]
+}
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://emailengine.app/#website",
+        "name": "EmailEngine",
+        "url": "https://emailengine.app/",
+        "publisher": { "@id": "https://emailengine.app/#organization" }
+    }
+    </script>
+    <script type="application/ld+json" data-generated="faq">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": "https://emailengine.app/#faq",
+    "isPartOf": {
+        "@id": "https://emailengine.app/#website"
+    },
+    "about": {
+        "@id": "https://emailengine.app/#software"
+    },
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What does EmailEngine actually do?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It keeps an open connection to every email account you register and exposes them all through one unified email API. You call REST endpoints with JSON; EmailEngine translates that into IMAP, SMTP, Gmail API or Microsoft Graph calls, and sends you webhooks when anything changes."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is EmailEngine a mail server?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. It connects to email accounts that already exist. It does not host mailboxes, create addresses or replace your email provider."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Where does the email data live?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "On your infrastructure, and in the original mailbox. EmailEngine caches only metadata in your own Redis: message IDs, flags and folder structure. Message content is fetched on demand from your email provider. Your app controls any onward storage or processing. We have no access to your instance, data or credentials."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does EmailEngine help with GDPR, HIPAA or data residency?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Self-hosting lets your team choose where EmailEngine processes mailbox data and stores credentials. You also control the connected providers, webhook destinations and optional AI services. Compliance depends on your deployment and operating practices. The security overview explains the architecture and its limits."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does EmailEngine keep a history of messages and webhook deliveries?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No, and that is deliberate. EmailEngine is a gateway, not a datastore. Everything lives in Redis, so it holds live queues and sync metadata and discards jobs once they have completed or permanently failed. There is no sent-mail archive and no webhook delivery log. Webhooks are retried up to ten times with exponential backoff, and you can raise the job history limit if you want failed jobs to stick around for inspection. For anything longer-lived, record events on your side as they arrive."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How much does EmailEngine cost?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "$1,450 or €1,200 per year. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I build EmailEngine into a product I sell?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, with an active subscription, as long as you keep direct management of the EmailEngine instances. Your customers use your product as end users and never need a licence of their own, so a CRM serving a thousand companies still runs on one subscription. What they cannot do is run their own instances or build their own services on top of EmailEngine."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What do I need to run it?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A server and Redis. EmailEngine ships as a single binary, a Docker image, an npm package and an installer script. Redis is used as a database rather than a cache, so it must run with the noeviction policy. Low latency between the two matters more than raw CPU."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How many mailboxes can one instance handle?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Several thousand. EmailEngine scales vertically; past that you shard across instances, each with its own Redis. Several instances sharing a single Redis database is not supported, and running multiple copies against one database will cause every instance to sync every account."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Which protocols are supported?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "IMAP and SMTP for any provider, plus native Gmail API and Microsoft Graph integrations. POP3, ActiveSync and Exchange Web Services are not supported."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can AI agents use EmailEngine to work with email?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, two ways. EmailEngine ships an MCP server (currently in beta, and off until you turn it on): point any MCP client at the endpoint and it gets a tool set for listing, searching, reading, filing, drafting and sending mail. Anything that cannot speak MCP uses the plain REST API instead, with the OpenAPI specification loaded as tool definitions and webhooks pushing incoming mail to your agent runtime as parsed JSON. Either way the agent holds an access token you can scope to a single account and revoke at any time, never mailbox credentials, and it can send directly or file drafts for a person to review. Because EmailEngine is self-hosted, message content reaches only the model you choose to call."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a trial?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. 14 days, full functionality, started from the dashboard of your own instance. No sign-up, no credit card. When it expires EmailEngine stops processing accounts, but your data stays where it is and activating a licence picks up where you left off."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is EmailEngine open source?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It is source available. You can read, audit and build the code, but running it beyond the trial requires a subscription. The licence spells out what is and isn't permitted."
+            }
+        }
+    ]
+}
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="container site-header__bar">
+            <a class="site-header__logo" href="/"><img src="/images/emailengine-logo.png" width="80" height="80" alt="EmailEngine"></a>
+            <nav class="site-header__links">
+                <a href="https://learn.emailengine.app/">Documentation</a>
+                <a href="https://learn.emailengine.app/docs/api/emailengine-api">API Reference</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#compare">Compare</a>
+                <a href="https://learn.emailengine.app/docs/support">Support</a>
+                <a href="https://blog.emailengine.app/">Blog</a>
+            </nav>
+            <a class="btn btn--primary site-header__cta" href="#downloads">
+                Download
+                <svg width="1em" viewBox="0 0 15 12" xmlns="http://www.w3.org/2000/svg"><path d="M9.6 7H1a1 1 0 1 1 0-2h8.6L7 2.4A1 1 0 0 1 8.4 1l4.3 4.2c.2.3.3.5.3.8 0 .3-.1.5-.3.7L8.4 11A1 1 0 1 1 7 9.5L9.6 7z" fill="currentColor"/></svg>
+            </a>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-burger">Menu</label>
+            <nav class="mobile-menu">
+                <label for="nav-toggle" class="mobile-menu__backdrop"></label>
+                <ul class="mobile-menu__panel">
+                    <li><a href="https://learn.emailengine.app/">Documentation</a></li>
+                    <li><a href="https://learn.emailengine.app/docs/api/emailengine-api">API Reference</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#compare">Compare</a></li>
+                    <li><a href="https://learn.emailengine.app/docs/support">Support</a></li>
+                    <li><a href="https://blog.emailengine.app/">Blog</a></li>
+                    <li><a href="#downloads">Download
+                        <svg width="13" height="12" xmlns="http://www.w3.org/2000/svg"><path d="M9.557 7H1a1 1 0 1 1 0-2h8.586L7.007 2.421a1 1 0 0 1 1.414-1.414l4.243 4.243c.203.202.3.47.292.736a.997.997 0 0 1-.292.735L8.42 10.964A1 1 0 1 1 7.007 9.55L9.557 7z" fill="currentColor"/></svg>
+                    </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+    <section id="hero" class="section section--flush">
+        <div class="header-spacer"></div>
+        <div class="split">
+            <div class="split__half">
+                <div class="split__text">
+                    <p class="hero-eyebrow">Email integration for SaaS, CRMs and AI agents</p>
+                    <h1 class="hero-title">The self-hosted email API for Gmail, Microsoft&nbsp;365 and IMAP</h1>
+                    <p class="hero-subtitle">Read, send and sync your users' Gmail, Microsoft 365 and IMAP email through one REST API. Run EmailEngine on your own infrastructure, with unlimited mailboxes for one flat annual fee.</p>
+                    <div class="hero-actions">
+                        <a class="btn btn--primary btn--large plausible-event-name=Trial+Intent plausible-event-location=Hero" href="#quickstart">Install &amp; start a free trial</a>
+                        <a class="btn btn--large plausible-event-name=API+Reference plausible-event-location=Hero" href="https://learn.emailengine.app/docs/api/emailengine-api">See the API reference</a>
+                    </div>
+                    <p class="hero-note">Free for 14 days. No sign-up or credit card. Activate the trial on your own server.</p>
+                    <p class="hero-price"><a class="plausible-event-name=Pricing+Intent plausible-event-location=Hero" href="#pricing"><span data-price="local">$1,450 or €1,200</span> per year</a> · Unlimited mailboxes. Prices exclude VAT.</p>
+                    <p class="hero-trust">Six years in production at <strong>200+ companies</strong> across <strong>38 countries</strong>.</p>
+                </div>
+            </div>
+            <div class="split__half split__media">
+                <div class="code-card">
+                    <div class="code-card__bar">
+                        <span class="code-card__dot"></span>
+                        <span class="code-card__dot"></span>
+                        <span class="code-card__dot"></span>
+                        <span class="code-card__label">Incoming email, pushed to your app</span>
+                    </div>
+<pre><code><span class="tok-dim">// EmailEngine POSTs this to your app the instant a message</span>
+<span class="tok-dim">// arrives in a connected mailbox. No IMAP, no polling.</span>
+
+<span class="tok-dim">{</span>
+<span class="tok-dim">  </span><span class="tok-key">"event"</span><span class="tok-dim">: </span><span class="tok-str">"messageNew"</span><span class="tok-dim">,</span>
+<span class="tok-dim">  </span><span class="tok-key">"account"</span><span class="tok-dim">: </span><span class="tok-str">"nina"</span><span class="tok-dim">,</span>
+<span class="tok-dim">  </span><span class="tok-key">"path"</span><span class="tok-dim">: </span><span class="tok-str">"INBOX"</span><span class="tok-dim">,</span>
+<span class="tok-dim">  </span><span class="tok-key">"date"</span><span class="tok-dim">: </span><span class="tok-str">"2026-07-24T09:14:32.000Z"</span><span class="tok-dim">,</span>
+<span class="tok-dim">  </span><span class="tok-key">"data"</span><span class="tok-dim">: {</span>
+<span class="tok-dim">    </span><span class="tok-key">"from"</span><span class="tok-dim">: { </span><span class="tok-key">"name"</span><span class="tok-dim">: </span><span class="tok-str">"Jane Smith"</span><span class="tok-dim">, </span><span class="tok-key">"address"</span><span class="tok-dim">: </span><span class="tok-str">"jane@acme.com"</span><span class="tok-dim"> },</span>
+<span class="tok-dim">    </span><span class="tok-key">"subject"</span><span class="tok-dim">: </span><span class="tok-str">"Re: Invoice #4021"</span><span class="tok-dim">,</span>
+<span class="tok-dim">    </span><span class="tok-key">"text"</span><span class="tok-dim">: { </span><span class="tok-key">"plain"</span><span class="tok-dim">: </span><span class="tok-str">"Payment sent, receipt attached."</span><span class="tok-dim"> },</span>
+<span class="tok-dim">    </span><span class="tok-key">"attachments"</span><span class="tok-dim">: [</span>
+<span class="tok-dim">      {</span>
+<span class="tok-dim">        </span><span class="tok-key">"filename"</span><span class="tok-dim">: </span><span class="tok-str">"receipt.pdf"</span><span class="tok-dim">,</span>
+<span class="tok-dim">        </span><span class="tok-key">"contentType"</span><span class="tok-dim">: </span><span class="tok-str">"application/pdf"</span>
+<span class="tok-dim">      }</span>
+<span class="tok-dim">    ]</span>
+<span class="tok-dim">  }</span>
+<span class="tok-dim">}</span></code></pre>
+                    <p class="code-card__caption">Point it at any Gmail, Outlook or IMAP mailbox, and inbound mail arrives parsed, in real time. The same API sends, too, and doubles as a tool surface for AI agents.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecosystem" class="section section--flush">
+        <div class="proof">
+            <div class="container">
+                <p class="proof__lead">Built and maintained by the author of <strong>Nodemailer</strong>, the email library your stack probably already depends on.</p>
+                <div class="proof__grid">
+                    <div class="proof__stat">
+                        <span class="proof__num">16.7M</span>
+                        <span class="proof__label">Nodemailer downloads per week</span>
+                    </div>
+                    <div class="proof__stat">
+                        <span class="proof__num">788M</span>
+                        <span class="proof__label">Yearly npm downloads across the Nodemailer email libraries</span>
+                    </div>
+                    <div class="proof__stat">
+                        <span class="proof__num">200+</span>
+                        <span class="proof__label">Companies running EmailEngine in production</span>
+                    </div>
+                    <div class="proof__stat">
+                        <span class="proof__num">380+</span>
+                        <span class="proof__label">Releases since 2020, a new one every few days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="audience" class="section">
+        <div class="container">
+            <div class="box docs-cols">
+                <div class="docs-cols__title">
+                    <h2 class="section-title section-title--spaced">Build email into your product</h2>
+                </div>
+                <div class="docs-cols__body">
+                    <div class="audience">
+                        <div>
+                            <h3>CRM and sales platforms</h3>
+                            <p>Sync your users' correspondence with their contacts, and let them send from their own address without leaving your app. <a href="https://learn.emailengine.app/docs/accounts/hosted-authentication">Connect your users' mailboxes</a>.</p>
+                        </div>
+                        <div>
+                            <h3>Support and shared inboxes</h3>
+                            <p>Turn support@ into tickets, track conversations across a team, and reply with stored templates. <a href="https://learn.emailengine.app/docs/webhooks/overview">Receive email events</a>.</p>
+                        </div>
+                        <div>
+                            <h3>Regulated industries</h3>
+                            <p>Banking, healthcare, legal and public sector teams that need control over where mailbox data is processed. <a href="/security">Review the security architecture</a>.</p>
+                        </div>
+                        <div>
+                            <h3>Email hosting and webmail</h3>
+                            <p>Build a modern webmail or mobile client on top of your existing hosting without implementing IMAP and MIME yourself.</p>
+                        </div>
+                        <div>
+                            <h3>AI products and agents</h3>
+                            <p>Give an agent structured, permissioned access to your users' mailboxes, or your own, to read, summarise, draft and send. <a href="#ai-agents">How agent access works</a>.</p>
+                        </div>
+                        <div>
+                            <h3>Enterprise integration</h3>
+                            <p>Bridge legacy applications that only speak IMAP and SMTP to OAuth2-only Microsoft 365 and Google Workspace tenants.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section">
+        <div class="container">
+            <h2 class="section-title">Pricing</h2>
+            <p class="section-subtitle">One annual subscription covers your company, your instances and unlimited connected mailboxes.</p>
+            <div class="pricing">
+                <div class="price-card price-card--accent">
+                    <p class="price-card__amount">
+                        <span class="price-card__figure"><span data-price="usd">$1,450</span><span data-price="eur">€1,200</span></span>
+                        <span class="price-card__period">/ year</span>
+                    </p>
+                    <p class="price-card__note">Renews annually. Prices exclude VAT where applicable.</p>
+                    <ul class="price-list">
+                        <li>Unlimited connected mailboxes</li>
+                        <li>Unlimited instances for production, staging and development</li>
+                        <li>Unlimited API calls and webhooks</li>
+                        <li>As many licence keys as you need</li>
+                        <li>All updates while your subscription is active</li>
+                        <li>Support directly from the developer who wrote the code</li>
+                        <li>Serve your customers from instances you manage, they never need a licence of their own</li>
+                    </ul>
+                    <div class="btn-row">
+                        <a class="btn btn--primary btn--large plausible-event-name=Get+Licence" href="https://postalsys.com/plans" target="_blank" rel="noopener noreferrer">Get a licence key</a>
+                        <a class="btn btn--large" href="#downloads">Download and try it first</a>
+                    </div>
+                </div>
+                <div class="price-card">
+                    <h3 class="price-card__title">Enterprise</h3>
+                    <p class="price-card__note">The same software on different payment terms. For procurement rules the annual plan doesn't fit, and for deployments where an expiring licence would be an operational risk.</p>
+                    <ul class="price-list">
+                        <li>A perpetual licence, paid once, instead of a subscription</li>
+                        <li>Verified offline: no licence checks, nothing phones home</li>
+                        <li>Payment by invoice or wire transfer</li>
+                        <li>Net terms rather than payment up front</li>
+                        <li>Custom contract and licence terms</li>
+                    </ul>
+                    <p class="price-card__note">Same features and support. A perpetual licence removes the risk of an expired renewal interrupting instances you manage on customer hardware.</p>
+                    <div class="btn-row">
+                        <a class="btn btn--large plausible-event-name=Enterprise+Contact" href="mailto:info@emailengine.app?subject=Enterprise%20licensing">Contact us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quickstart" class="section">
+        <div class="container">
+            <h2 class="section-title">Running in about ten minutes</h2>
+            <p class="section-subtitle section-subtitle--spaced">EmailEngine plus a Redis database, on your own machine. No account to create, no data to hand over.</p>
+            <ol class="steps">
+                <li>
+                    <h3>Install it</h3>
+                    <p>The shipped Compose file brings up EmailEngine together with a correctly configured Redis. Single binaries, an npm package and an installer script are <a href="https://learn.emailengine.app/docs/installation">also available</a>.</p>
+                    <pre><code>curl -LO https://go.emailengine.app/docker-compose.yml
+docker compose up -d</code></pre>
+                </li>
+                <li>
+                    <h3>Activate the trial</h3>
+                    <p>Open your instance's own dashboard, click <em>Start a 14-day trial</em>, generate an access token. No account to create, no email to hand over.</p>
+                    <pre><code>open http://127.0.0.1:3000</code></pre>
+                </li>
+                <li>
+                    <h3>Connect a mailbox</h3>
+                    <p>Register an account over the API, or send your user to a hosted authentication form and let EmailEngine handle the OAuth2 dance.</p>
+                    <pre><code><a href="https://learn.emailengine.app/docs/api/post-v-1-authentication-form">POST /v1/authentication/form</a></code></pre>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <section id="downloads" class="section section--blue section--cta">
+        <div class="container">
+            <div class="cta-titles">
+                <h2 class="section-title">Download EmailEngine</h2>
+                <p class="section-subtitle">Every install can activate its own 14-day trial from the dashboard. Full functionality, no sign-up, no credit card.</p>
+            </div>
+            <div class="btn-row">
+                <a class="btn btn--large plausible-event-name=Download plausible-event-os=macOS" href="https://go.emailengine.app/emailengine-arm.pkg">macOS</a>
+                <a class="btn btn--large plausible-event-name=Download plausible-event-os=Linux" href="https://go.emailengine.app/emailengine.tar.gz">Linux</a>
+                <a class="btn btn--large plausible-event-name=Download plausible-event-os=Windows" href="https://go.emailengine.app/emailengine.exe">Windows</a>
+                <a class="btn btn--large plausible-event-name=Download plausible-event-os=Docker" href="https://learn.emailengine.app/docs/installation/docker">Docker</a>
+                <a class="btn btn--large plausible-event-name=Download plausible-event-os=Other" href="https://learn.emailengine.app/docs/installation">All install options…</a>
+            </div>
+        </div>
+        <div class="wave"><svg viewBox="0 0 1695 57" preserveAspectRatio="none"><path d="M0 23c135.4 19 289.6 28.5 462.5 28.5C721.9 51.5 936.7 1 1212.2 1 1395.8.9 1556.7 8.3 1695 23v34H0V23z" fill="#fff" fill-rule="evenodd"/></svg></div>
+    </section>
+
+    <section id="connect" class="section section--flush">
+        <div class="split">
+            <div class="split__half">
+                <div class="split__text">
+                    <h2 class="section-title">Connect Gmail, Microsoft 365 and IMAP accounts</h2>
+                    <p class="section-subtitle">Send your user to a <a href="https://learn.emailengine.app/docs/accounts/hosted-authentication">hosted authentication form</a>, they sign in with Google or Microsoft, and they land back in your app with the account already connected. Or register accounts directly over the API if you'd rather own the flow.</p>
+                    <ul class="checklist">
+                        <li class="checklist__item">Gmail and Google Workspace</li>
+                        <li class="checklist__item">Microsoft 365 and Outlook.com</li>
+                        <li class="checklist__item">Any IMAP server</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="split__half split__media">
+                <div class="frame frame--browser">
+                    <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#FFF" width="940" height="623" rx="9"/><path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"/><circle fill="#FD6157" cx="18" cy="18" r="6"/><circle fill="#FDBD04" cx="38" cy="18" r="6"/><circle fill="#30CA2E" cx="58" cy="18" r="6"/></g></svg>
+                    <div class="frame__screen"><picture><source type="image/webp" srcset="/images/home/hosted-auth-640.webp 640w, /images/home/hosted-auth-1280.webp 1280w, /images/home/hosted-auth-2048.webp 2048w" sizes="(max-width: 750px) calc(100vw - 50px), calc(50vw - 100px)"><img src="/images/home/hosted-auth.jpg" width="2048" height="1280" loading="lazy" decoding="async" alt="EmailEngine hosted authentication form"></picture></div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Managed OAuth2</h3>
+                    <p class="feature__body">EmailEngine stores and refreshes tokens for you, or calls your own authentication server if you already hold them.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Service accounts</h3>
+                    <p class="feature__body">Google Workspace domain-wide delegation and Workload Identity Federation; Microsoft 365 app-only access with no user login.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Shared and delegated mailboxes</h3>
+                    <p class="feature__body">Microsoft 365 shared mailboxes, delegated accounts and Government Cloud tenants.</p>
+                </div>
+            </div>
+            <p class="cmp__foot"><a href="https://learn.emailengine.app/docs/accounts/oauth2-setup">Set up OAuth2 for Google and Microsoft</a></p>
+        </div>
+    </section>
+
+    <section id="receive" class="section section--flush">
+        <div class="split split--reverse">
+            <div class="split__half split__media">
+                <div class="frame frame--browser">
+                    <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#FFF" width="940" height="623" rx="9"/><path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"/><circle fill="#FD6157" cx="18" cy="18" r="6"/><circle fill="#FDBD04" cx="38" cy="18" r="6"/><circle fill="#30CA2E" cx="58" cy="18" r="6"/></g></svg>
+                    <div class="frame__screen"><picture><source type="image/webp" srcset="/images/home/webhooks-640.webp 640w, /images/home/webhooks-1280.webp 1280w, /images/home/webhooks-2048.webp 2048w" sizes="(max-width: 750px) calc(100vw - 50px), calc(50vw - 100px)"><img src="/images/home/webhooks.jpg" width="2048" height="1280" loading="lazy" decoding="async" alt="Webhook configuration in EmailEngine"></picture></div>
+                </div>
+            </div>
+            <div class="split__half">
+                <div class="split__text">
+                    <h2 class="section-title">Receive email webhooks for Gmail, Outlook and IMAP</h2>
+                    <p class="section-subtitle">EmailEngine holds an open connection to every account and pushes a <a href="https://learn.emailengine.app/docs/webhooks/overview">webhook</a> when mail arrives, is read, moved, flagged or deleted. Every delivery is signed, deduplicated and retried.</p>
+                    <ul class="checklist">
+                        <li class="checklist__item">New mail</li>
+                        <li class="checklist__item">Flag and folder changes</li>
+                        <li class="checklist__item">Signed payloads</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Webhook routes</h3>
+                    <p class="feature__body">Filter and reshape events with small JavaScript functions, then fan one event out to Slack, Discord, Zapier, n8n or your own endpoint.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Search</h3>
+                    <p class="feature__body">Query by sender, recipient, subject, body, date, header and thread, plus Gmail labels and Outlook categories.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Attachments and calendar invites</h3>
+                    <p class="feature__body">Download attachments, inline images as data URIs, and parse ICS invites out of incoming messages.</p>
+                </div>
+            </div>
+            <p class="cmp__foot"><a href="https://learn.emailengine.app/docs/webhooks/overview">Explore email webhooks and delivery options</a></p>
+        </div>
+    </section>
+
+    <section id="send" class="section section--flush">
+        <div class="split">
+            <div class="split__half">
+                <div class="split__text">
+                    <h2 class="section-title">Send through your users' own mail servers</h2>
+                    <p class="section-subtitle">Post JSON, get a queued message. EmailEngine builds the MIME, sends it over the account's own SMTP or provider API, uploads it to Sent Mail and sets the threading headers so replies stay in the conversation.</p>
+                    <ul class="checklist">
+                        <li class="checklist__item">Saved to Sent Mail</li>
+                        <li class="checklist__item">Correct threading</li>
+                        <li class="checklist__item">Bounce detection</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="split__half split__media">
+                <div class="frame frame--browser">
+                    <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#FFF" width="940" height="623" rx="9"/><path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"/><circle fill="#FD6157" cx="18" cy="18" r="6"/><circle fill="#FDBD04" cx="38" cy="18" r="6"/><circle fill="#30CA2E" cx="58" cy="18" r="6"/></g></svg>
+                    <div class="frame__screen"><picture><source type="image/webp" srcset="/images/home/deliverability-640.webp 640w, /images/home/deliverability-1280.webp 1280w, /images/home/deliverability-2048.webp 2048w" sizes="(max-width: 750px) calc(100vw - 50px), calc(50vw - 100px)"><img src="/images/home/deliverability.png" width="2048" height="1280" loading="lazy" decoding="async" alt="A sent message as it appears in a mail client"></picture></div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Templates and mail merge</h3>
+                    <p class="feature__body">Stored templates with variables, and one API call that fans out into personalised messages with their own Message-IDs.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Scheduling and idempotency</h3>
+                    <p class="feature__body">Queue a message for a future time, and use an idempotency key so a retried request never sends twice.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Bounces and suppression</h3>
+                    <p class="feature__body">Bounce and complaint parsing with ML-assisted classification, automatic blocklists and RFC 8058 one-click unsubscribe.</p>
+                </div>
+            </div>
+            <p class="cmp__foot"><a href="https://learn.emailengine.app/docs/sending/basic-sending">Explore sending, replies and templates</a></p>
+        </div>
+    </section>
+
+    <section id="ai-agents" class="section section--flush-top">
+        <div class="split split--reverse">
+            <div class="split__half split__media">
+                <div class="frame frame--browser">
+                    <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#FFF" width="940" height="623" rx="9"/><path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"/><circle fill="#FD6157" cx="18" cy="18" r="6"/><circle fill="#FDBD04" cx="38" cy="18" r="6"/><circle fill="#30CA2E" cx="58" cy="18" r="6"/></g></svg>
+                    <div class="frame__screen"><picture><source type="image/webp" srcset="/images/home/mcp-consent-640.webp 640w, /images/home/mcp-consent-1280.webp 1280w, /images/home/mcp-consent-2048.webp 2048w" sizes="(max-width: 750px) calc(100vw - 50px), calc(50vw - 100px)"><img src="/images/home/mcp-consent.png" width="2048" height="1280" loading="lazy" decoding="async" alt="EmailEngine asking an operator to approve an MCP client, showing the four instance-management levels it can be granted"></picture></div>
+                </div>
+            </div>
+            <div class="split__half">
+                <div class="split__text">
+                    <h2 class="section-title">A self-hosted email MCP server for AI agents</h2>
+                    <p class="section-subtitle">Agent frameworks come with web search and code execution, but not with a way into a mailbox. EmailEngine ships an <a href="https://learn.emailengine.app/docs/mcp">MCP server</a>, currently in beta: turn on the endpoint, point any MCP client at it, and the agent can search the history, read the thread, file the message, draft the reply or send it, across every Gmail, Microsoft&nbsp;365 and IMAP account you have connected.</p>
+                    <ul class="checklist">
+                        <li class="checklist__item">Model Context Protocol</li>
+                        <li class="checklist__item">Mail access off by default</li>
+                        <li class="checklist__item">Revocable in one click</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">A curated tool set</h3>
+                    <p class="feature__body">Listing and searching mail, reading a message or its attachments, flagging and moving it, drafting a reply, sending. Message bodies come back sanitized, with the quoted history marked, so the model can tell the new text from the thread under it.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">You approve what it may do</h3>
+                    <p class="feature__body">Connecting a client is a consent screen, not a config file. What it may manage and how much mail it may touch are two separate choices, mail starting at no access at all, and you can bind it to a single mailbox. The exact tools it walks away with are listed before you approve.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Every tool call is an API call</h3>
+                    <p class="feature__body">Tools are not a second implementation. Each one runs the REST route behind it with the caller's own token, so scopes, account binding, IP restrictions, rate limits and the audit log apply exactly as they do to the API.</p>
+                </div>
+            </div>
+            <p class="cmp__foot">Start with the <a href="https://learn.emailengine.app/docs/mcp">MCP documentation</a>, or hand your agent the <a href="https://go.emailengine.app/swagger.json">OpenAPI specification</a> and the <a href="https://learn.emailengine.app/capabilities.json">machine-readable capabilities manifest</a> directly.</p>
+        </div>
+    </section>
+
+    <section id="dashboard" class="section section--flush">
+        <div class="split">
+            <div class="split__half">
+                <div class="split__text">
+                    <h2 class="section-title">An admin UI you can hand to support</h2>
+                    <p class="section-subtitle">Every connected account and its sync state in one place, with the live message and webhook queues alongside. Browse a mailbox, work out why an account stopped syncing, or pull an account's protocol log, all without opening a terminal.</p>
+                    <ul class="checklist">
+                        <li class="checklist__item">Account health at a glance</li>
+                        <li class="checklist__item">Message browser</li>
+                        <li class="checklist__item">Dark mode</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="split__half split__media">
+                <div class="frame frame--browser">
+                    <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#FFF" width="940" height="623" rx="9"/><path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"/><circle fill="#FD6157" cx="18" cy="18" r="6"/><circle fill="#FDBD04" cx="38" cy="18" r="6"/><circle fill="#30CA2E" cx="58" cy="18" r="6"/></g></svg>
+                    <div class="frame__screen"><picture><source type="image/webp" srcset="/images/home/hero-dashboard-640.webp 640w, /images/home/hero-dashboard-1280.webp 1280w, /images/home/hero-dashboard-2048.webp 2048w" sizes="(max-width: 750px) calc(100vw - 50px), calc(50vw - 100px)"><img src="/images/home/hero-dashboard.png" width="2048" height="1280" loading="lazy" decoding="async" alt="EmailEngine dashboard showing connected accounts and recent activity"></picture></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="operate" class="section section--flush">
+        <div class="split split--reverse">
+            <div class="split__half split__media">
+                <div class="frame frame--browser">
+                    <svg viewBox="0 0 940 623" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><rect fill="#FFF" width="940" height="623" rx="9"/><path d="M0 36h940V9a9 9 0 0 0-9-9H9a9 9 0 0 0-9 9v27z" fill="#DFE1E6"/><circle fill="#FD6157" cx="18" cy="18" r="6"/><circle fill="#FDBD04" cx="38" cy="18" r="6"/><circle fill="#30CA2E" cx="58" cy="18" r="6"/></g></svg>
+                    <div class="frame__screen"><picture><source type="image/webp" srcset="/images/home/monitoring-640.webp 640w, /images/home/monitoring-1280.webp 1280w, /images/home/monitoring-2048.webp 2048w" sizes="(max-width: 750px) calc(100vw - 50px), calc(50vw - 100px)"><img src="/images/home/monitoring.png" width="2880" height="1800" loading="lazy" decoding="async" alt="Grafana dashboard showing EmailEngine metrics"></picture></div>
+                </div>
+            </div>
+            <div class="split__half">
+                <div class="split__text">
+                    <h2 class="section-title">Built to be operated, not just installed</h2>
+                    <p class="section-subtitle">A Prometheus endpoint and a ready-made Grafana dashboard, live queue inspection, and optional per-account logging of <a href="https://learn.emailengine.app/docs/advanced/logging">the raw IMAP conversation</a>, so you can see exactly what the mail server said.</p>
+                    <ul class="checklist">
+                        <li class="checklist__item">Prometheus</li>
+                        <li class="checklist__item">Grafana</li>
+                        <li class="checklist__item">Opt-in IMAP logs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Queue visibility</h3>
+                    <p class="feature__body">Inspect, retry and cancel messages and webhook deliveries while they are still in the queue.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Per-account logs</h3>
+                    <p class="feature__body">Switch on protocol logging for one account while you chase a problem, then download the transcript.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Scoped access tokens</h3>
+                    <p class="feature__body">Issue tokens limited to one account, one scope, an IP range or a rate limit. Tokens are stored only as hashes.</p>
+                </div>
+            </div>
+            <p class="cmp__foot"><a href="https://learn.emailengine.app/docs/advanced/logging">Read the logging and troubleshooting guide</a></p>
+        </div>
+    </section>
+
+    <section id="capabilities" class="section section--tight">
+        <div class="container">
+            <h2 class="section-title">Everything else it does</h2>
+            <p class="section-subtitle section-subtitle--spaced">The parts that do not need a section of their own, and usually turn out to be the reason a build-it-yourself estimate was wrong.</p>
+            <ul class="spec-list">
+                <li><strong>Autodiscovery</strong> resolves IMAP and SMTP settings from an email address, so users only type their credentials.</li>
+                <li><strong>Send-only accounts</strong> register Gmail or Outlook for sending alone, with no mailbox syncing and no IMAP connection.</li>
+                <li><strong>IMAP and SMTP proxy</strong> lets legacy clients that only speak password auth reach OAuth2-only accounts.</li>
+                <li><strong>MIME parsing</strong> that copes with real mailboxes: legacy character encodings, inline images, malformed headers.</li>
+                <li><strong>Signed webhooks</strong> carry an HMAC-SHA256 signature, a stable event ID and an attempt counter on every delivery.</li>
+                <li><strong>Open and click tracking</strong> with an optional pixel and link rewriting, filtering known security scanners out of the results.</li>
+                <li><strong>Deliverability testing</strong> returns SPF, DKIM, DMARC, BIMI and ARC results, plus which Gmail tab the message landed in.</li>
+                <li><strong>SMTP gateways</strong> route selected messages through an external relay while keeping the account's own identity.</li>
+                <li><strong>AI processing</strong> can run incoming mail through an LLM for summaries, sentiment, extracted events and a phishing risk score, with your prompt and your API key.</li>
+                <li><strong>Bulk export</strong> writes a mailbox to compressed NDJSON for archival, migration or legal discovery, resumable and encrypted at rest, and currently in beta.</li>
+                <li><strong>Proxy support</strong> for HTTP and SOCKS, globally or per account, with outbound IP pinning.</li>
+                <li><strong>Error reporting</strong> into your own self-hosted Sentry, configured from the admin UI.</li>
+                <li><strong>White labelling</strong> rebrands the hosted authentication pages and runs them in seven languages.</li>
+                <li><strong>Authentication audit trail</strong> records every admin sign-in, failed attempt and passkey change to the application log, ready to ship into your SIEM.</li>
+            </ul>
+            <p class="cmp__foot">The <a href="https://learn.emailengine.app/docs/api/emailengine-api">email API reference</a> documents every endpoint behind these, and <a href="https://learn.emailengine.app/capabilities.json">capabilities.json</a> is the machine-readable version.</p>
+        </div>
+    </section>
+
+    <section id="compare" class="section">
+        <div class="container">
+            <h2 class="section-title">EmailEngine or a hosted email API?</h2>
+            <p class="section-subtitle">Both approaches are legitimate. They differ in who holds the data and how the bill scales.</p>
+            <div class="cmp">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>EmailEngine</th>
+                            <th>Hosted email APIs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Where mail is processed</th>
+                            <td>Your infrastructure</td>
+                            <td>The vendor's cloud</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Pricing model</th>
+                            <td>Flat annual fee, unlimited mailboxes</td>
+                            <td>Typically per connected mailbox</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Who runs it</th>
+                            <td>You (a server and Redis)</td>
+                            <td>The vendor</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Uptime and scaling</th>
+                            <td>Yours to own; several thousand mailboxes per instance</td>
+                            <td>Vendor SLA, scales past that for you</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Compliance certifications</th>
+                            <td>Inherited from your own environment</td>
+                            <td>Vendor holds SOC 2, ISO 27001 and similar</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Best fit</th>
+                            <td>Teams with somewhere to run it, data-residency requirements, or many mailboxes</td>
+                            <td>Teams with no ops capacity and a small number of mailboxes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="cmp__foot">Weighing a specific vendor? See how EmailEngine compares with <a href="/nylas-alternative">Nylas</a> and with <a href="/unipile-alternative">Unipile</a>, including where each of them is the stronger choice, with feature-by-feature versions <a href="https://learn.emailengine.app/docs/comparison/emailengine-vs-nylas">in the documentation</a>.</p>
+        </div>
+    </section>
+
+    <section id="build" class="section">
+        <div class="container">
+            <h2 class="section-title">EmailEngine vs building your own email integration</h2>
+            <p class="section-subtitle section-subtitle--spaced">Plenty of teams do, and for a single mailbox over plain IMAP that is the right call. It usually stops being the right call at the second provider, because the hard part was never the protocol. It is everything around it.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Every provider is different</h3>
+                    <p class="feature__body">Gmail exposes labels as folders, so one message lives in several at once. Microsoft throttles on its own terms. Plenty of IMAP servers advertise capabilities they do not honour. The RFC is the easy part.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">OAuth2 that keeps working</h3>
+                    <p class="feature__body">Google and Microsoft each expire and refresh tokens their own way, with service accounts, delegated access and tenant policies on top. Getting the first token is a tutorial. Keeping thousands of them valid is the actual job.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Connections that stay up</h3>
+                    <p class="feature__body">Thousands of persistent IMAP connections holding IDLE, reconnecting cleanly, and staying inside each provider's limits. This is the part that pages you at three in the morning.</p>
+                </div>
+            </div>
+            <p class="cmp__foot">EmailEngine has been maintained since 2020. Explore the <a href="https://github.com/postalsys/emailengine/releases">release history</a> and <a href="https://learn.emailengine.app/docs/api/emailengine-api">email API reference</a> to see what your team can build on.</p>
+        </div>
+    </section>
+
+    <section id="testimonials" class="section section--testimonials">
+        <div class="container">
+            <h2 class="section-title">Trusted by 200+ companies</h2>
+            <p class="section-subtitle section-subtitle--spaced">CRM, SaaS and AI businesses across 38 countries run EmailEngine in production</p>
+        </div>
+    </section>
+    <section id="testimonials-widget" class="section section--flush-top">
+        <div class="container">
+            <div class="box">
+                <div class="senja-frame-embed" data-id="7ca6c9d9-b40f-4e9e-bb82-882fae00b61b"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="security" class="section section--ink">
+        <div class="container">
+            <h2 class="section-title">When self-hosting is the requirement</h2>
+            <p class="section-subtitle section-subtitle--spaced">EmailEngine processes email on infrastructure you control and connects directly to your email providers. Postal Systems has no access to your mailboxes. Your team chooses where it runs and which external services receive data. See the <a href="/security">security and deployment overview</a> for storage, outbound connections and operational requirements.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3 class="feature__title">Your infrastructure, your controls</h3>
+                    <p class="feature__body">Message bodies are fetched on demand from the original mailbox. Only sync metadata is cached, in Redis you control.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">Encrypted at rest</h3>
+                    <p class="feature__body">AES-256-GCM encryption for every stored credential, OAuth2 token and secret.</p>
+                </div>
+                <div class="feature">
+                    <h3 class="feature__title">SSO and strong auth</h3>
+                    <p class="feature__body">OpenID Connect against any provider, Okta, passkeys and TOTP, with group-based authorisation and SSO-only mode.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="faq" class="section section--blue">
+        <div class="container">
+            <h2 class="section-title section-title--spaced">FAQ</h2>
+            <div class="faq faq--accordion">
+                <details class="faq-item">
+                    <summary><h3>What does EmailEngine actually do?</h3></summary>
+                    <p>It keeps an open connection to every email account you register and exposes them all through one unified email API. You call REST endpoints with JSON; EmailEngine translates that into IMAP, SMTP, Gmail API or Microsoft Graph calls, and sends you webhooks when anything changes.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Is EmailEngine a mail server?</h3></summary>
+                    <p>No. It connects to email accounts that already exist. It does not host mailboxes, create addresses or replace your email provider.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Where does the email data live?</h3></summary>
+                    <p>On your infrastructure, and in the original mailbox. EmailEngine caches only <a href="https://learn.emailengine.app/docs/deployment/encryption">metadata</a> in your own Redis: message IDs, flags and folder structure. Message content is fetched on demand from your email provider. Your app controls any onward storage or processing. We have no access to your instance, data or credentials.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Does EmailEngine help with GDPR, HIPAA or data residency?</h3></summary>
+                    <p>Self-hosting lets your team choose where EmailEngine processes mailbox data and stores credentials. You also control the connected providers, webhook destinations and optional AI services. Compliance depends on your deployment and operating practices. The <a href="/security">security overview</a> explains the architecture and its limits.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Does EmailEngine keep a history of messages and webhook deliveries?</h3></summary>
+                    <p>No, and that is deliberate. EmailEngine is a gateway, not a datastore. Everything lives in Redis, so it holds live queues and sync metadata and discards jobs once they have completed or permanently failed. There is no sent-mail archive and no webhook delivery log. Webhooks are retried up to ten times with exponential backoff, and you can raise the job history limit if you want failed jobs to stick around for inspection. For anything longer-lived, record events on your side as they arrive.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>How much does EmailEngine cost?</h3></summary>
+                    <p><span data-price="local">$1,450 or €1,200</span> per year. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Can I build EmailEngine into a product I sell?</h3></summary>
+                    <p>Yes, with an active subscription, as long as you keep direct management of the EmailEngine instances. Your customers use your product as end users and never need a licence of their own, so a CRM serving a thousand companies still runs on one subscription. What they cannot do is run their own instances or build their own services on top of EmailEngine.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>What do I need to run it?</h3></summary>
+                    <p>A server and <a href="https://redis.io/">Redis</a>. EmailEngine ships as a single binary, a Docker image, an npm package and an installer script. Redis is used as a database rather than a cache, so it must run with the <code>noeviction</code> policy. Low latency between the two matters more than raw CPU.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>How many mailboxes can one instance handle?</h3></summary>
+                    <p>Several thousand. EmailEngine scales vertically; past that you shard across instances, each with its own Redis. Several instances sharing a single Redis database is not supported, and running multiple copies against one database will cause every instance to sync every account.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Which protocols are supported?</h3></summary>
+                    <p><a href="https://learn.emailengine.app/docs/accounts">IMAP and SMTP</a> for any provider, plus native Gmail API and Microsoft Graph integrations. POP3, ActiveSync and Exchange Web Services are not supported.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Can AI agents use EmailEngine to work with email?</h3></summary>
+                    <p>Yes, two ways. EmailEngine ships an <a href="https://learn.emailengine.app/docs/mcp">MCP server</a> (currently in beta, and off until you turn it on): point any MCP client at the endpoint and it gets a tool set for listing, searching, reading, filing, drafting and sending mail. Anything that cannot speak MCP uses the plain REST API instead, with the <a href="https://go.emailengine.app/swagger.json">OpenAPI specification</a> loaded as tool definitions and webhooks pushing incoming mail to your agent runtime as parsed JSON. Either way the agent holds an access token you can scope to a single account and revoke at any time, never mailbox credentials, and it can send directly or file drafts for a person to review. Because EmailEngine is self-hosted, message content reaches only the model you choose to call.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Is there a trial?</h3></summary>
+                    <p>Yes. 14 days, full functionality, started from the dashboard of your own instance. No sign-up, no credit card. When it expires EmailEngine stops processing accounts, but your data stays where it is and activating a licence picks up where you left off.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Is EmailEngine open source?</h3></summary>
+                    <p>It is source available. You can read, audit and build the code, but running it beyond the trial requires a subscription. The <a href="https://emailengine.dev/license.html">licence</a> spells out what is and isn't permitted.</p>
+                </details>
+                <details class="faq-item" data-schema="skip">
+                    <summary><h3>Something else?</h3></summary>
+                    <p>The <a href="https://learn.emailengine.app/">documentation</a> covers most of it, and the <a href="https://learn.emailengine.app/docs/support">support channels</a> are listed there too.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <section id="trial" class="section section--ink">
+        <div class="container signup">
+            <h2 class="section-title">Connect your first mailbox</h2>
+            <p class="section-subtitle">Install EmailEngine on your own server and try every feature free for 14 days. No sign-up or credit card.</p>
+            <div class="btn-row btn-row--center">
+                <a class="btn btn--primary btn--large plausible-event-name=Trial+Intent plausible-event-location=Footer" href="#quickstart">Install &amp; start a free trial</a>
+                <a class="btn btn--large plausible-event-name=API+Reference plausible-event-location=Footer" href="https://learn.emailengine.app/docs/api/emailengine-api">Explore the email API</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="newsletter" class="section">
+        <div class="container signup">
+            <h2 class="section-title">Release notes, occasionally</h2>
+            <p class="section-subtitle">EmailEngine <a href="https://github.com/postalsys/emailengine/releases">ships a release every few days</a>. Get a short summary when something meaningful lands.</p>
+            <form class="newsletter plausible-event-name=Newsletter+Signup"
+                  action="https://app.us12.list-manage.com/subscribe/post?u=37e0a741337cfd1771d212471&amp;id=0bb8fc852d"
+                  method="post"
+                  target="_blank"
+                  rel="noopener">
+                <label class="visually-hidden" for="newsletter-email">Email address</label>
+                <input class="newsletter__input" id="newsletter-email" name="EMAIL" type="email" autocomplete="email" required placeholder="you@company.com">
+                <div class="honeypot" aria-hidden="true">
+                    <input type="text" name="b_37e0a741337cfd1771d212471_0bb8fc852d" tabindex="-1" value="" autocomplete="off">
+                </div>
+                <button class="btn btn--primary btn--large" type="submit">Subscribe</button>
+            </form>
+            <p class="signup__note">A handful of emails a year. We send a confirmation link first, and you can unsubscribe in one click.</p>
+        </div>
+    </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-nav">
+                <div>
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#downloads">Download</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#compare">Compare</a></li>
+                        <li><a href="/security">Security</a></li>
+                        <li><a href="/nylas-alternative">Nylas alternative</a></li>
+                        <li><a href="/unipile-alternative">Unipile alternative</a></li>
+                        <li><a href="https://blog.emailengine.app/">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="https://learn.emailengine.app/docs/installation">Installation</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/api/emailengine-api">API reference</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/webhooks/overview">Webhooks</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/oauth2-setup">OAuth2 setup</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Guides</h4>
+                    <ul>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/gmail/gmail-imap">Gmail</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/accounts/microsoft-365/outlook-365">Microsoft 365</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/sending/basic-sending">Sending mail</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/integrations/low-code">Low-code integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="https://learn.emailengine.app/docs/support">Support</a></li>
+                        <li><a href="https://github.com/postalsys/emailengine">GitHub</a></li>
+                        <li><a href="mailto:info@emailengine.app">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="site-footer__inner">
+                <div class="site-footer__meta">
+                    <span>© 2021-2026 Postal Systems OÜ</span>
+                    <nav class="site-footer__links">
+                        <a href="https://postalsys.com/tos">Terms of Service</a>
+                        <a href="/privacy-policy">Privacy Policy</a>
+                        <a href="https://emailengine.dev/license.html">EmailEngine License</a>
+                    </nav>
+                </div>
+                <ul class="site-footer__social">
+                    <li><a href="https://twitter.com/emailengine" target="_blank" rel="noreferrer noopener" aria-label="EmailEngine on X">
+                        <svg width="26" height="26" viewBox="0 0 378 387" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M221.181 174.003L345.147 33H315.771L208.13 155.431L122.159 33H23L153.006 218.137L23 366H52.3775L166.048 236.709L256.841 366H356L221.173 174.003H221.18H221.181ZM180.943 219.768L167.771 201.332L62.9633 54.6399H108.086L192.667 173.026L205.839 191.462L315.785 345.345H270.662L180.943 219.775V219.768Z" fill="currentColor"/></svg>
+                    </a></li>
+                    <li><a href="https://github.com/postalsys/emailengine" target="_blank" rel="noreferrer noopener" aria-label="EmailEngine on GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" fill="currentColor"/></svg>
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
