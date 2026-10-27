@@ -99,7 +99,7 @@
         </div>
     </section>
 
-    <section id="options" class="section section--tight">
+    <section id="options" class="section section--flush-top">
         <div class="container">
             <div class="support-options">
                 <div class="support-option">
@@ -114,10 +114,16 @@
                 <div class="support-option">
                     <h2 class="support-option__title">Contact support</h2>
                     <p class="support-option__lead">A reply from the person who wrote EmailEngine.</p>
-                    <p class="card__body">There is no ticket queue or support tier in between. Include your EmailEngine version, the account type involved (Gmail API, Microsoft Graph or IMAP) and the relevant log lines; <a href="https://learn.emailengine.app/docs/troubleshooting#information-to-collect">this checklist</a> covers what makes a report answerable.</p>
-                    <p class="support-option__note">Email <a href="mailto:support@postalsys.com">support@postalsys.com</a></p>
+                    <p class="card__body">There is no ticket queue or support tier in between. A first reply can solve the problem when the email includes:</p>
+                    <ul class="support-option__list">
+                        <li>your EmailEngine version</li>
+                        <li>the account type involved: Gmail API, Microsoft Graph or IMAP</li>
+                        <li>what you expected, and what happened instead</li>
+                        <li>the relevant log lines, with passwords, access tokens, license keys and <code>EENGINE_SECRET</code> removed</li>
+                    </ul>
+                    <p class="support-option__note">Email <a href="mailto:support@postalsys.com">support@postalsys.com</a>, or see <a href="https://learn.emailengine.app/docs/troubleshooting#information-to-collect">the full checklist</a>.</p>
                     <div class="btn-row">
-                        <a class="btn btn--primary btn--large" href="mailto:support@postalsys.com">Email support</a>
+                        <a class="btn btn--primary btn--large" href="mailto:support@postalsys.com?subject=EmailEngine%20support&amp;body=EmailEngine%20version%3A%20%0AAccount%20type%20(Gmail%20API%2C%20Microsoft%20Graph%20or%20IMAP)%3A%20%0A%0AWhat%20I%20expected%3A%20%0A%0AWhat%20happened%20instead%3A%20%0A%0ALog%20lines%3A%20%0A">Email support</a>
                     </div>
                 </div>
             </div>
@@ -128,15 +134,7 @@
         <div class="container">
             <h2 class="section-title">More places to look</h2>
             <p class="section-subtitle section-subtitle--spaced">Most questions already have an answer in one of these.</p>
-            <div class="cards">
-                <div class="card">
-                    <h3 class="card__title"><a href="https://learn.emailengine.app/">Documentation</a></h3>
-                    <p class="card__body">Installation, configuration, accounts, sending, webhooks and deployment, for every feature.</p>
-                </div>
-                <div class="card">
-                    <h3 class="card__title"><a href="https://learn.emailengine.app/docs/api/emailengine-api">API reference</a></h3>
-                    <p class="card__body">Every endpoint with its request and response fields.</p>
-                </div>
+            <div class="cards cards--links">
                 <div class="card">
                     <h3 class="card__title"><a href="https://learn.emailengine.app/docs/troubleshooting">Troubleshooting</a></h3>
                     <p class="card__body">Startup, webhook, performance and sync problems, and what to collect before reporting one.</p>
@@ -156,6 +154,14 @@
                 <div class="card">
                     <h3 class="card__title"><a href="https://github.com/postalsys/emailengine/blob/master/CHANGELOG.md">Release notes</a></h3>
                     <p class="card__body">What changed in each version, worth a look before and after upgrading.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title"><a href="https://learn.emailengine.app/docs/api/emailengine-api">API reference</a></h3>
+                    <p class="card__body">Every endpoint with its request and response fields.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title"><a href="https://learn.emailengine.app/">Documentation</a></h3>
+                    <p class="card__body">Installation, configuration, accounts, sending, webhooks and deployment, for every feature.</p>
                 </div>
                 <div class="card">
                     <h3 class="card__title"><a href="https://learn.emailengine.app/docs/licensing">Licensing</a></h3>

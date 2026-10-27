@@ -222,7 +222,14 @@ input {
 .btn:hover {
     background: transparent;
     box-shadow: inset 0 0 0 2px;
+    color: inherit;
     text-decoration: none;
+}
+
+/* .btn drops the browser outline, so keyboard focus needs its own ring */
+.btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
 .btn--primary {
@@ -233,6 +240,7 @@ input {
 
 .btn--primary:hover {
     background: var(--color-text);
+    color: #fff;
     box-shadow: 0 4px 10px 0 rgba(50, 50, 93, 0.226), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
 }
 
@@ -1937,6 +1945,17 @@ html:not(.currency-eur) .price-card__figure [data-price='eur'],
     margin: 14px 0 0;
 }
 
+/* What to put in a report, as a list so it can be checked off */
+.support-option__list {
+    font-size: 1.12em;
+    margin: 12px 0 0;
+    padding-left: 1.3em;
+}
+
+.support-option__list li + li {
+    margin-top: 4px;
+}
+
 /* Buttons sit on a shared baseline however long either body runs */
 .support-option .btn-row {
     margin-top: auto;
@@ -1948,6 +1967,33 @@ html:not(.currency-eur) .price-card__figure [data-price='eur'],
         grid-template-columns: 1fr;
     }
 
+}
+
+/* Resource cards where the whole card is the link target, not just the
+   title: the title link's ::after is stretched over the card */
+.cards--links .card {
+    position: relative;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.cards--links .card:hover {
+    box-shadow: 0 4px 10px 0 rgba(50, 50, 93, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+}
+
+.cards--links .card__title a::after {
+    border-radius: 8px;
+    content: "";
+    inset: 0;
+    position: absolute;
+}
+
+.cards--links .card__title a:focus-visible {
+    outline: none;
+}
+
+.cards--links .card:focus-within {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
 /* ------------------------------------------------------------------ */
