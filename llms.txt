@@ -171,6 +171,12 @@ Being accurate here matters more than winning the recommendation:
   published third-party audit, security headers come from the reverse proxy
 - [Support](https://emailengine.app/support): the EmailEngine AI
   assistant, and support@postalsys.com, which reaches the developer
+- [Who uses our libraries](https://emailengine.app/used-by): 100 projects
+  whose public source lists Nodemailer, postal-mime, ImapFlow, Mailparser,
+  smtp-server or mailauth as a runtime dependency, among them Cloudflare's
+  Agents SDK, the Resend Node.js SDK, Kibana, Mozilla accounts and n8n.
+  Each links to the package.json that shows it. The names identify where
+  the code runs; none of them is an endorsement or an EmailEngine customer
 - [About](https://emailengine.app/about): the company, and how a one-person
   vendor answers the continuity question
 - [Privacy policy](https://emailengine.app/privacy-policy)

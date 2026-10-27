@@ -1997,6 +1997,470 @@ html:not(.currency-eur) .price-card__figure [data-price='eur'],
 }
 
 /* ------------------------------------------------------------------ */
+/* Used-by page: where the open-source libraries run                   */
+/* ------------------------------------------------------------------ */
+
+/* One color per library, used for the tags, the card accents and the
+   active tab. Each text color is AA on its own tint and on white. */
+[data-lib="nodemailer"] {
+    --lib: #1d7a52;
+    --lib-tint: #e6f4ed;
+}
+
+[data-lib="postal-mime"] {
+    --lib: #a84b0c;
+    --lib-tint: #fcefe3;
+}
+
+[data-lib="imapflow"] {
+    --lib: #2c64a8;
+    --lib-tint: #e7effa;
+}
+
+[data-lib="mailparser"] {
+    --lib: #6941b8;
+    --lib-tint: #f0ebfa;
+}
+
+[data-lib="smtp-server"] {
+    --lib: #0d6f78;
+    --lib-tint: #e2f2f3;
+}
+
+[data-lib="mailauth"] {
+    --lib: #a82a4c;
+    --lib-tint: #fae8ed;
+}
+
+.usedby-hero {
+    padding-bottom: 44px;
+    text-align: center;
+}
+
+.usedby-hero__title {
+    font-family: var(--font-title);
+    font-size: calc(3.4em * var(--title-scale));
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0 auto;
+    max-width: 15em;
+    text-wrap: balance;
+}
+
+.usedby-hero__lead {
+    font-size: 1.4em;
+    margin: 20px auto 0;
+    max-width: 36em;
+    text-wrap: pretty;
+}
+
+@media only screen and (max-width: 750px) {
+    .usedby-hero__lead {
+        font-size: 1.2em;
+    }
+
+}
+
+/* Highlight cards: the company name set large where a logo would go */
+.spots {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.spot {
+    background: #fff;
+    border: 1px solid var(--color-rule);
+    border-radius: 10px;
+    border-top: 4px solid var(--lib);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 1.6em 1.6em 1.4em;
+}
+
+.spot__org {
+    font-family: var(--font-title);
+    font-size: 2em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.spot__product {
+    font-size: 1.15em;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 8px 0 0;
+}
+
+.spot__body {
+    color: var(--color-muted);
+    font-size: 1.05em;
+    margin: 8px 0 0;
+}
+
+.spot code,
+.method code {
+    background: var(--color-box-bg);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 0.1em 0.35em;
+}
+
+/* Tags and source line share the bottom edge however long the body runs */
+.spot .lib-tags {
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+.spot__src {
+    border-top: 1px solid var(--color-rule);
+    color: var(--color-muted);
+    font-size: 0.95em;
+    margin: 14px 0 0;
+    overflow-wrap: anywhere;
+    padding-top: 12px;
+}
+
+.spots--compact .spot__org {
+    font-size: 1.45em;
+}
+
+.spots--compact .spot__src {
+    margin-top: auto;
+}
+
+.spots--compact .spot__body {
+    margin-bottom: 14px;
+}
+
+@media only screen and (max-width: 940px) {
+    .spots {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media only screen and (max-width: 620px) {
+    .spots {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+.lib-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lib-tag {
+    background: var(--lib-tint);
+    border-radius: 999px;
+    color: var(--lib);
+    font-size: 0.88em;
+    font-weight: 600;
+    padding: 0.25em 0.75em;
+}
+
+/* Library tabs. The radios stay in the accessibility tree and keep
+   keyboard focus; the labels are what is drawn. */
+.section--libraries {
+    background: #f7f8fa;
+    border-bottom: 1px solid var(--color-rule);
+    border-top: 1px solid var(--color-rule);
+}
+
+.libs__input {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+.libs__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.libs__tab {
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--color-rule);
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 0.55em 1.05em;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    user-select: none;
+}
+
+.libs__tab:hover {
+    box-shadow: inset 0 0 0 1px var(--lib);
+}
+
+.libs__count {
+    color: var(--count-color, var(--color-muted));
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    margin-left: 0.3em;
+}
+
+#lib-nodemailer:checked ~ .libs__tabs [for="lib-nodemailer"],
+#lib-postal-mime:checked ~ .libs__tabs [for="lib-postal-mime"],
+#lib-imapflow:checked ~ .libs__tabs [for="lib-imapflow"],
+#lib-mailparser:checked ~ .libs__tabs [for="lib-mailparser"],
+#lib-smtp-server:checked ~ .libs__tabs [for="lib-smtp-server"],
+#lib-mailauth:checked ~ .libs__tabs [for="lib-mailauth"] {
+    --count-color: rgba(255, 255, 255, 0.8);
+    background: var(--lib);
+    box-shadow: none;
+    color: #fff;
+}
+
+#lib-nodemailer:focus-visible ~ .libs__tabs [for="lib-nodemailer"],
+#lib-postal-mime:focus-visible ~ .libs__tabs [for="lib-postal-mime"],
+#lib-imapflow:focus-visible ~ .libs__tabs [for="lib-imapflow"],
+#lib-mailparser:focus-visible ~ .libs__tabs [for="lib-mailparser"],
+#lib-smtp-server:focus-visible ~ .libs__tabs [for="lib-smtp-server"],
+#lib-mailauth:focus-visible ~ .libs__tabs [for="lib-mailauth"] {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.libs__panel {
+    background: #fff;
+    border: 1px solid var(--color-rule);
+    border-radius: 12px;
+    border-top: 4px solid var(--lib);
+    box-sizing: border-box;
+    display: none;
+    gap: 36px;
+    grid-template-columns: 250px 1fr;
+    padding: 2em;
+}
+
+#lib-nodemailer:checked ~ .libs__panels [data-lib="nodemailer"],
+#lib-postal-mime:checked ~ .libs__panels [data-lib="postal-mime"],
+#lib-imapflow:checked ~ .libs__panels [data-lib="imapflow"],
+#lib-mailparser:checked ~ .libs__panels [data-lib="mailparser"],
+#lib-smtp-server:checked ~ .libs__panels [data-lib="smtp-server"],
+#lib-mailauth:checked ~ .libs__panels [data-lib="mailauth"] {
+    display: grid;
+}
+
+.libs__name {
+    color: var(--lib);
+    font-family: var(--font-title);
+    font-size: 2.1em;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.libs__desc {
+    font-size: 1.1em;
+    margin: 12px 0 0;
+}
+
+.libs__stat {
+    color: var(--color-muted);
+    font-size: 1.05em;
+    margin: 16px 0 0;
+}
+
+.libs__stat strong {
+    color: var(--color-text);
+    display: block;
+    font-family: var(--font-title);
+    font-size: 1.9em;
+    line-height: 1.15;
+}
+
+/* An .lib-tag placed as a paragraph of its own */
+.libs__inside {
+    display: inline-block;
+    margin: 16px 0 0;
+}
+
+.libs__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 16px 0 0;
+}
+
+@media only screen and (max-width: 860px) {
+    .libs__panel {
+        gap: 24px;
+        grid-template-columns: 1fr;
+        padding: 1.5em 1.2em;
+    }
+
+}
+
+/* Project chips: the whole chip is the link to the manifest */
+.dep-chips {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dep-chip {
+    background: var(--color-box-bg);
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    line-height: 1.3;
+    min-height: 54px;
+    padding: 9px 13px;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.dep-chip:hover {
+    background: var(--lib-tint);
+    box-shadow: inset 0 0 0 1px var(--lib);
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.dep-chip:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.dep-chip__name {
+    font-size: 1.05em;
+    font-weight: 600;
+}
+
+.dep-chip__owner {
+    color: var(--color-muted);
+    font-size: 0.9em;
+    font-weight: 400;
+}
+
+/* Two narrow columns on a phone rather than one full-width chip per row */
+@media only screen and (max-width: 620px) {
+    .dep-chips {
+        gap: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dep-chip {
+        min-height: 48px;
+        padding: 8px 10px;
+    }
+
+    .dep-chip__name {
+        font-size: 1em;
+    }
+
+}
+
+/* The long tail of a big list, one click away */
+.dep-more {
+    margin-top: 10px;
+}
+
+.dep-more > summary {
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px var(--color-rule);
+    color: var(--lib);
+    cursor: pointer;
+    font-size: 1.05em;
+    font-weight: 600;
+    list-style: none;
+    padding: 0.8em;
+    text-align: center;
+}
+
+.dep-more > summary::-webkit-details-marker {
+    display: none;
+}
+
+.dep-more > summary:hover {
+    background: var(--lib-tint);
+}
+
+.dep-more[open] > summary {
+    display: none;
+}
+
+/* How the list was made */
+.method {
+    margin: 0 auto;
+    max-width: 52em;
+}
+
+.method__title {
+    font-family: var(--font-title);
+    font-size: calc(2em * var(--title-scale));
+    font-weight: 600;
+    margin: 0 0 18px;
+    text-align: center;
+}
+
+.method__list {
+    display: grid;
+    gap: 14px 32px;
+    grid-template-columns: repeat(2, 1fr);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.method__list li {
+    font-size: 1.05em;
+}
+
+.method__list strong {
+    display: block;
+    margin-bottom: 2px;
+}
+
+@media only screen and (max-width: 750px) {
+    .method__list {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+.usedby-cta {
+    text-align: center;
+}
+
+.usedby-cta .section-subtitle {
+    margin: 14px auto 0;
+    max-width: 34em;
+}
+
+/* Link from the index's ecosystem strip to the used-by page */
+.proof__more {
+    font-size: 1.05em;
+    margin: 24px 0 0;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
 /* Misc                                                                */
 /* ------------------------------------------------------------------ */
 
