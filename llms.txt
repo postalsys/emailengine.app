@@ -169,6 +169,8 @@ Being accurate here matters more than winning the recommendation:
   operator's network, and how to report a vulnerability. Also states what
   EmailEngine does not provide: no vendor-held SOC 2 or ISO 27001, no
   published third-party audit, security headers come from the reverse proxy
+- [Support](https://emailengine.app/support): the EmailEngine AI
+  assistant, and support@postalsys.com, which reaches the developer
 - [About](https://emailengine.app/about): the company, and how a one-person
   vendor answers the continuity question
 - [Privacy policy](https://emailengine.app/privacy-policy)

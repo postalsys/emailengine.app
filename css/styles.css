@@ -1899,6 +1899,58 @@ html:not(.currency-eur) .price-card__figure [data-price='eur'],
 }
 
 /* ------------------------------------------------------------------ */
+/* Support page: the two ways to get help                              */
+/* ------------------------------------------------------------------ */
+
+.support-options {
+    display: grid;
+    gap: 22px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.support-option {
+    background: var(--color-box-bg);
+    border-radius: 8px;
+    border-top: 4px solid var(--color-accent);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 2.4em 2.2em;
+}
+
+.support-option__title {
+    font-family: var(--font-title);
+    font-size: 2.2em;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 6px;
+}
+
+.support-option__lead {
+    font-size: 1.3em;
+    margin: 0 0 16px;
+}
+
+.support-option__note {
+    color: var(--color-muted);
+    font-size: 1.05em;
+    margin: 14px 0 0;
+}
+
+/* Buttons sit on a shared baseline however long either body runs */
+.support-option .btn-row {
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+@media only screen and (max-width: 900px) {
+    .support-options {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ------------------------------------------------------------------ */
 /* Misc                                                                */
 /* ------------------------------------------------------------------ */
 
