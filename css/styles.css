@@ -11,10 +11,9 @@
 /* ------------------------------------------------------------------ */
 
 :root {
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    --font-title: "Josefin Sans", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    --font-mono: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    --font-title: 'Josefin Sans', sans-serif;
 
     --color-text: rgba(40, 40, 40, 1);
     --color-accent: rgb(64, 126, 201);
@@ -39,7 +38,6 @@
     :root {
         --title-scale: 0.7;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -115,7 +113,6 @@ input {
     .container {
         padding: 0 15px;
     }
-
 }
 
 .section {
@@ -241,7 +238,9 @@ input {
 .btn--primary:hover {
     background: var(--color-text);
     color: #fff;
-    box-shadow: 0 4px 10px 0 rgba(50, 50, 93, 0.226), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 4px 10px 0 rgba(50, 50, 93, 0.226),
+        0 1px 3px 0 rgba(0, 0, 0, 0.08);
 }
 
 /* On blue backgrounds the roles invert: outline turns white, primary
@@ -283,7 +282,6 @@ input {
         justify-content: center;
         text-align: center;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -342,7 +340,6 @@ input {
     .site-header__links > a {
         padding: 0 10px;
     }
-
 }
 
 /* Mobile navigation drawer (CSS-only, driven by the checkbox) */
@@ -365,8 +362,10 @@ input {
 .nav-burger::before,
 .nav-burger::after {
     border-radius: 2px;
-    box-shadow: inset 0 0 0 3px, 0 9px 0 0;
-    content: "";
+    box-shadow:
+        inset 0 0 0 3px,
+        0 9px 0 0;
+    content: '';
     height: 4px;
     left: 5px;
     position: absolute;
@@ -404,7 +403,9 @@ input {
     animation: menu-drop 0.15s ease-out;
     background: #fff;
     border-radius: 5px;
-    box-shadow: 0 50px 100px -12px rgba(0, 0, 0, 0.15), 0 30px 60px -30px rgba(0, 0, 0, 0.08),
+    box-shadow:
+        0 50px 100px -12px rgba(0, 0, 0, 0.15),
+        0 30px 60px -30px rgba(0, 0, 0, 0.08),
         0 0 20px rgba(0, 0, 0, 0.1);
     float: right;
     list-style: none;
@@ -464,7 +465,6 @@ input {
         display: block;
         z-index: 600;
     }
-
 }
 
 /* Spacer that keeps page content clear of the fixed header */
@@ -582,7 +582,6 @@ input {
     .hero-subtitle {
         margin: 0 auto;
     }
-
 }
 
 @media only screen and (max-width: 700px) {
@@ -595,7 +594,6 @@ input {
     .hero-subtitle {
         font-size: 12.5pt;
     }
-
 }
 
 /* Product mockups: a screenshot inside a browser SVG frame */
@@ -657,7 +655,6 @@ input {
     .frame--browser {
         min-width: 0;
     }
-
 }
 
 /* Checkmark rows below feature descriptions */
@@ -686,7 +683,7 @@ input {
 .checklist__item::before {
     background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2021%2017'%3E%3Cpolygon%20fill='%2322BC66'%20points='0,9.4%207,16.42%2020.41,3%2017.59,0.16%206.99,10.75%202.83,6.59'/%3E%3C/svg%3E")
         no-repeat center / contain;
-    content: "";
+    content: '';
     flex-shrink: 0;
     height: 17px;
     margin-right: 5px;
@@ -697,7 +694,6 @@ input {
     .checklist {
         justify-content: center;
     }
-
 }
 
 /* Titled points with descriptions (about page) */
@@ -803,7 +799,6 @@ input {
     .faq {
         column-count: 1;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -849,7 +844,6 @@ input {
     .docs-cols__title .section-title {
         text-align: center;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -957,7 +951,6 @@ span:not(.address__ids) + .address__ids {
     .address__note {
         margin: 10px 0 0;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1242,7 +1235,6 @@ span:not(.address__ids) + .address__ids {
     .hero-actions {
         justify-content: center;
     }
-
 }
 
 /* Keep the primary CTA above the fold on a phone. The current page pushes
@@ -1268,7 +1260,6 @@ span:not(.address__ids) + .address__ids {
         padding-bottom: 24px;
         padding-top: 26px;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1409,7 +1400,6 @@ span:not(.address__ids) + .address__ids {
     .proof__grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1450,7 +1440,6 @@ span:not(.address__ids) + .address__ids {
     .cards {
         grid-template-columns: 1fr;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1480,14 +1469,12 @@ span:not(.address__ids) + .address__ids {
     .feature-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
 @media only screen and (max-width: 620px) {
     .feature-grid {
         grid-template-columns: 1fr;
     }
-
 }
 
 /* Spec sheet: denser than .feature-grid, which gives each item a heading and
@@ -1519,7 +1506,6 @@ span:not(.address__ids) + .address__ids {
     .spec-list {
         columns: 1;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1623,7 +1609,7 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
 .price-list li::before {
     background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2021%2017'%3E%3Cpolygon%20fill='%2322BC66'%20points='0,9.4%207,16.42%2020.41,3%2017.59,0.16%206.99,10.75%202.83,6.59'/%3E%3C/svg%3E")
         no-repeat center / contain;
-    content: "";
+    content: '';
     flex-shrink: 0;
     height: 17px;
     margin-right: 8px;
@@ -1635,7 +1621,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .pricing {
         grid-template-columns: 1fr;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1843,7 +1828,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
         grid-row: 3;
         margin-top: 6px;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1872,14 +1856,12 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .audience {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
 @media only screen and (max-width: 620px) {
     .audience {
         grid-template-columns: 1fr;
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1919,7 +1901,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .footer-nav {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -1982,7 +1963,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .support-options {
         grid-template-columns: 1fr;
     }
-
 }
 
 /* Resource cards where the whole card is the link target, not just the
@@ -1993,12 +1973,14 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
 }
 
 .cards--links .card:hover {
-    box-shadow: 0 4px 10px 0 rgba(50, 50, 93, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    box-shadow:
+        0 4px 10px 0 rgba(50, 50, 93, 0.12),
+        0 1px 3px 0 rgba(0, 0, 0, 0.06);
 }
 
 .cards--links .card__title a::after {
     border-radius: 8px;
-    content: "";
+    content: '';
     inset: 0;
     position: absolute;
 }
@@ -2018,32 +2000,32 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
 
 /* One color per library, used for the tags, the card accents and the
    active tab. Each text color is AA on its own tint and on white. */
-[data-lib="nodemailer"] {
+[data-lib='nodemailer'] {
     --lib: #1d7a52;
     --lib-tint: #e6f4ed;
 }
 
-[data-lib="postal-mime"] {
+[data-lib='postal-mime'] {
     --lib: #a84b0c;
     --lib-tint: #fcefe3;
 }
 
-[data-lib="imapflow"] {
+[data-lib='imapflow'] {
     --lib: #2c64a8;
     --lib-tint: #e7effa;
 }
 
-[data-lib="mailparser"] {
+[data-lib='mailparser'] {
     --lib: #6941b8;
     --lib-tint: #f0ebfa;
 }
 
-[data-lib="smtp-server"] {
+[data-lib='smtp-server'] {
     --lib: #0d6f78;
     --lib-tint: #e2f2f3;
 }
 
-[data-lib="mailauth"] {
+[data-lib='mailauth'] {
     --lib: #a82a4c;
     --lib-tint: #fae8ed;
 }
@@ -2074,7 +2056,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .usedby-hero__lead {
         font-size: 1.2em;
     }
-
 }
 
 /* Highlight cards: the company name set large where a logo would go */
@@ -2160,14 +2141,12 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .spots {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
 @media only screen and (max-width: 620px) {
     .spots {
         grid-template-columns: 1fr;
     }
-
 }
 
 .lib-tags {
@@ -2218,7 +2197,9 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     font-size: 1.1em;
     font-weight: 600;
     padding: 0.55em 1.05em;
-    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition:
+        background-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
     user-select: none;
 }
 
@@ -2233,24 +2214,24 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     margin-left: 0.3em;
 }
 
-#lib-nodemailer:checked ~ .libs__tabs [for="lib-nodemailer"],
-#lib-postal-mime:checked ~ .libs__tabs [for="lib-postal-mime"],
-#lib-imapflow:checked ~ .libs__tabs [for="lib-imapflow"],
-#lib-mailparser:checked ~ .libs__tabs [for="lib-mailparser"],
-#lib-smtp-server:checked ~ .libs__tabs [for="lib-smtp-server"],
-#lib-mailauth:checked ~ .libs__tabs [for="lib-mailauth"] {
+#lib-nodemailer:checked ~ .libs__tabs [for='lib-nodemailer'],
+#lib-postal-mime:checked ~ .libs__tabs [for='lib-postal-mime'],
+#lib-imapflow:checked ~ .libs__tabs [for='lib-imapflow'],
+#lib-mailparser:checked ~ .libs__tabs [for='lib-mailparser'],
+#lib-smtp-server:checked ~ .libs__tabs [for='lib-smtp-server'],
+#lib-mailauth:checked ~ .libs__tabs [for='lib-mailauth'] {
     --count-color: rgba(255, 255, 255, 0.8);
     background: var(--lib);
     box-shadow: none;
     color: #fff;
 }
 
-#lib-nodemailer:focus-visible ~ .libs__tabs [for="lib-nodemailer"],
-#lib-postal-mime:focus-visible ~ .libs__tabs [for="lib-postal-mime"],
-#lib-imapflow:focus-visible ~ .libs__tabs [for="lib-imapflow"],
-#lib-mailparser:focus-visible ~ .libs__tabs [for="lib-mailparser"],
-#lib-smtp-server:focus-visible ~ .libs__tabs [for="lib-smtp-server"],
-#lib-mailauth:focus-visible ~ .libs__tabs [for="lib-mailauth"] {
+#lib-nodemailer:focus-visible ~ .libs__tabs [for='lib-nodemailer'],
+#lib-postal-mime:focus-visible ~ .libs__tabs [for='lib-postal-mime'],
+#lib-imapflow:focus-visible ~ .libs__tabs [for='lib-imapflow'],
+#lib-mailparser:focus-visible ~ .libs__tabs [for='lib-mailparser'],
+#lib-smtp-server:focus-visible ~ .libs__tabs [for='lib-smtp-server'],
+#lib-mailauth:focus-visible ~ .libs__tabs [for='lib-mailauth'] {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
@@ -2267,12 +2248,12 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     padding: 2em;
 }
 
-#lib-nodemailer:checked ~ .libs__panels [data-lib="nodemailer"],
-#lib-postal-mime:checked ~ .libs__panels [data-lib="postal-mime"],
-#lib-imapflow:checked ~ .libs__panels [data-lib="imapflow"],
-#lib-mailparser:checked ~ .libs__panels [data-lib="mailparser"],
-#lib-smtp-server:checked ~ .libs__panels [data-lib="smtp-server"],
-#lib-mailauth:checked ~ .libs__panels [data-lib="mailauth"] {
+#lib-nodemailer:checked ~ .libs__panels [data-lib='nodemailer'],
+#lib-postal-mime:checked ~ .libs__panels [data-lib='postal-mime'],
+#lib-imapflow:checked ~ .libs__panels [data-lib='imapflow'],
+#lib-mailparser:checked ~ .libs__panels [data-lib='mailparser'],
+#lib-smtp-server:checked ~ .libs__panels [data-lib='smtp-server'],
+#lib-mailauth:checked ~ .libs__panels [data-lib='mailauth'] {
     display: grid;
 }
 
@@ -2323,7 +2304,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
         grid-template-columns: 1fr;
         padding: 1.5em 1.2em;
     }
-
 }
 
 /* Project chips: the whole chip is the link to the manifest */
@@ -2348,7 +2328,9 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     line-height: 1.3;
     min-height: 54px;
     padding: 9px 13px;
-    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition:
+        background-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
 }
 
 .dep-chip:hover {
@@ -2389,7 +2371,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .dep-chip__name {
         font-size: 1em;
     }
-
 }
 
 /* The long tail of a big list, one click away */
@@ -2457,7 +2438,6 @@ html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
     .method__list {
         grid-template-columns: 1fr;
     }
-
 }
 
 .usedby-cta {
