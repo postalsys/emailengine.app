@@ -1578,6 +1578,22 @@ html:not(.currency-eur) .price-card__figure [data-price='eur'],
     display: none;
 }
 
+/* The monthly line under the yearly figure: the same currency rule, and the
+   minimum EmailEngine release for monthly license keys in a quieter tone. */
+html:not(.currency-eur) .price-card__monthly [data-price-monthly='eur'],
+.currency-eur .price-card__monthly [data-price-monthly='usd'] {
+    display: none;
+}
+
+.price-card__monthly {
+    margin: 0.25rem 0 0;
+    color: var(--color-muted);
+}
+
+.price-card__monthly-note {
+    font-size: 0.85em;
+}
+
 .price-card__note {
     color: var(--color-muted);
     font-size: 1.05em;

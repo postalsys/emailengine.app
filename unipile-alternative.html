@@ -29,12 +29,9 @@
     <meta name="twitter:image" content="https://emailengine.app/images/og-cover.png">
 
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,600&amp;display=fallback">
+    <link rel="stylesheet" href="/css/fonts.css">
 
     <script defer data-domain="emailengine.app" data-api="https://a.emailengine.app/e" src="https://a.emailengine.app/pv.js"></script>
-    <script defer src="https://postalsys.com/frame.js"></script>
 
     <link rel="preload" href="https://postalsys.com/region.js" as="script">
     <script>
@@ -50,6 +47,19 @@
                     var text = key === 'local' ? local : fmt[key];
                     if (typeof text === 'string') { spans[i].textContent = text; }
                 }
+                var mfmt = data.monthly && data.monthly.formatted;
+                if (!mfmt || typeof mfmt.usd !== 'string' || typeof mfmt.eur !== 'string') { return; }
+                var mlocal = data.currency === 'eur' ? mfmt.eur : mfmt.usd;
+                var mspans = document.querySelectorAll('[data-price-monthly]');
+                for (var j = 0; j < mspans.length; j++) {
+                    var mkey = mspans[j].getAttribute('data-price-monthly');
+                    var mtext = mkey === 'local' ? mlocal : mfmt[mkey];
+                    if (typeof mtext === 'string') { mspans[j].textContent = mtext; }
+                }
+                var blocks = document.querySelectorAll('[data-monthly]');
+                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = false; }
+                var yearlyOnly = document.querySelectorAll('[data-yearly-only]');
+                for (var y = 0; y < yearlyOnly.length; y++) { yearlyOnly[y].hidden = true; }
             };
             var apply = function (data) {
                 if (!data || typeof data !== 'object') { return; }
