@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <title>EmailEngine: Self-Hosted Email API for IMAP, Gmail and Microsoft 365</title>
-    <meta name="description" content="Read, send and sync Gmail, Outlook and IMAP email through one self-hosted REST API. Unlimited mailboxes, flat annual pricing. Try EmailEngine free for 14 days.">
+    <meta name="description" content="Read, send and sync Gmail, Outlook and IMAP email through one self-hosted REST API. Unlimited mailboxes, flat yearly or monthly pricing. Try EmailEngine free for 14 days.">
     <meta name="robots" content="max-image-preview:large">
 
     <link rel="canonical" href="https://emailengine.app/">
@@ -18,14 +18,14 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:url" content="https://emailengine.app/">
     <meta property="og:title" content="EmailEngine: Self-Hosted Email API for IMAP, Gmail and Microsoft 365">
-    <meta property="og:description" content="Read, send and sync Gmail, Outlook and IMAP email with one self-hosted REST API. Unlimited mailboxes, flat annual pricing, free 14-day trial.">
+    <meta property="og:description" content="Read, send and sync Gmail, Outlook and IMAP email with one self-hosted REST API. Unlimited mailboxes, flat yearly or monthly pricing, free 14-day trial.">
     <meta property="og:image" content="https://emailengine.app/images/og-cover.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@emailengine">
     <meta name="twitter:title" content="EmailEngine: Self-Hosted Email API for IMAP, Gmail and Microsoft 365">
-    <meta name="twitter:description" content="Read, send and sync Gmail, Outlook and IMAP email with one self-hosted REST API. Unlimited mailboxes, flat annual pricing, free 14-day trial.">
+    <meta name="twitter:description" content="Read, send and sync Gmail, Outlook and IMAP email with one self-hosted REST API. Unlimited mailboxes, flat yearly or monthly pricing, free 14-day trial.">
     <meta name="twitter:image" content="https://emailengine.app/images/og-cover.png">
 
     <link rel="stylesheet" href="/css/styles.css">
@@ -38,21 +38,18 @@
         (function () {
             var KEY = 'psysRegion';
             var fill = function (attr, fmt, currency) {
-                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return false; }
+                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return; }
                 var spans = document.querySelectorAll('[' + attr + ']');
                 for (var i = 0; i < spans.length; i++) {
                     var key = spans[i].getAttribute(attr);
                     var text = fmt[key === 'local' ? currency : key];
                     if (typeof text === 'string') { spans[i].textContent = text; }
                 }
-                return true;
             };
             var applyPrices = function (data) {
                 var currency = data.currency === 'eur' ? 'eur' : 'usd';
-                if (!fill('data-price', data.formatted, currency)) { return; }
-                if (!fill('data-price-monthly', data.monthly && data.monthly.formatted, currency)) { return; }
-                var blocks = document.querySelectorAll('[data-monthly],[data-yearly-only]');
-                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = blocks[k].hasAttribute('data-yearly-only'); }
+                fill('data-price', data.formatted, currency);
+                fill('data-price-monthly', data.monthly && data.monthly.formatted, currency);
             };
             var apply = function (data) {
                 if (!data || typeof data !== 'object') { return; }
@@ -136,7 +133,7 @@
             "priceCurrency": "USD",
             "url": "https://postalsys.com/plans",
             "availability": "https://schema.org/InStock",
-            "description": "Annual subscription. Unlimited instances, unlimited connected mailboxes."
+            "description": "Yearly subscription. Unlimited instances, unlimited connected mailboxes."
         },
         {
             "@type": "Offer",
@@ -144,7 +141,23 @@
             "priceCurrency": "EUR",
             "url": "https://postalsys.com/plans",
             "availability": "https://schema.org/InStock",
-            "description": "Annual subscription. Unlimited instances, unlimited connected mailboxes."
+            "description": "Yearly subscription. Unlimited instances, unlimited connected mailboxes."
+        },
+        {
+            "@type": "Offer",
+            "price": "169",
+            "priceCurrency": "USD",
+            "url": "https://postalsys.com/plans",
+            "availability": "https://schema.org/InStock",
+            "description": "Monthly subscription, requires EmailEngine 2.88.0 or newer. Unlimited instances, unlimited connected mailboxes."
+        },
+        {
+            "@type": "Offer",
+            "price": "139",
+            "priceCurrency": "EUR",
+            "url": "https://postalsys.com/plans",
+            "availability": "https://schema.org/InStock",
+            "description": "Monthly subscription, requires EmailEngine 2.88.0 or newer. Unlimited instances, unlimited connected mailboxes."
         }
     ],
     "sameAs": [
@@ -219,7 +232,7 @@
             "name": "How much does EmailEngine cost?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "$1,450 or €1,200 per year. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering."
+                "text": "$1,450 or €1,200 per year, or $169 or €139 per month. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering."
             }
         },
         {
@@ -334,7 +347,7 @@
                         <a class="btn btn--large plausible-event-name=API+Reference plausible-event-location=Hero" href="https://learn.emailengine.app/docs/api/emailengine-api">See the API reference</a>
                     </div>
                     <p class="hero-note">Free for 14 days. No sign-up or credit card. Activate the trial on your own server.</p>
-                    <p class="hero-price"><a class="plausible-event-name=Pricing+Intent plausible-event-location=Hero" href="#pricing"><span data-price="local">$1,450 or €1,200</span> per year<span data-monthly hidden> or <span data-price-monthly="local"></span> per month</span></a> · Unlimited mailboxes. Prices exclude VAT.</p>
+                    <p class="hero-price"><a class="plausible-event-name=Pricing+Intent plausible-event-location=Hero" href="#pricing"><span data-price="local">$1,450 or €1,200</span> per year or <span data-price-monthly="local">$169 or €139</span> per month</a> · Unlimited mailboxes. Prices exclude VAT.</p>
                     <p class="hero-trust">Six years in production at <strong>200+ companies</strong> across <strong>38 countries</strong>.</p>
                 </div>
             </div>
@@ -440,15 +453,15 @@
     <section id="pricing" class="section">
         <div class="container">
             <h2 class="section-title">Pricing</h2>
-            <p class="section-subtitle">One annual subscription covers your company, your instances and unlimited connected mailboxes.</p>
+            <p class="section-subtitle">One subscription, billed yearly or monthly, covers your company, your instances and unlimited connected mailboxes.</p>
             <div class="pricing">
                 <div class="price-card price-card--accent">
                     <p class="price-card__amount">
                         <span class="price-card__figure"><span data-price="usd">$1,450</span><span data-price="eur">€1,200</span></span>
                         <span class="price-card__period">/ year</span>
                     </p>
-                    <p class="price-card__monthly" data-monthly hidden>or <span data-price-monthly="local"></span> / month <span class="price-card__monthly-note">(EmailEngine 2.88.0 or newer)</span></p>
-                    <p class="price-card__note"><span data-yearly-only>Renews annually. </span>Prices exclude VAT where applicable.</p>
+                    <p class="price-card__monthly">or <span data-price-monthly="usd">$169</span><span data-price-monthly="eur">€139</span> / month <span class="price-card__monthly-note">(EmailEngine 2.88.0 or newer)</span></p>
+                    <p class="price-card__note">Billed yearly or monthly. Prices exclude VAT where applicable.</p>
                     <ul class="price-list">
                         <li>Unlimited connected mailboxes</li>
                         <li>Unlimited instances for production, staging and development</li>
@@ -465,7 +478,7 @@
                 </div>
                 <div class="price-card">
                     <h3 class="price-card__title">Enterprise</h3>
-                    <p class="price-card__note">The same software on different payment terms. For procurement rules the annual plan doesn't fit, and for deployments where an expiring licence would be an operational risk.</p>
+                    <p class="price-card__note">The same software on different payment terms. For procurement rules the standard plans don't fit, and for deployments where an expiring licence would be an operational risk.</p>
                     <ul class="price-list">
                         <li>A perpetual licence, paid once, instead of a subscription</li>
                         <li>Verified offline: no licence checks, nothing phones home</li>
@@ -786,7 +799,7 @@ docker compose up -d</code></pre>
                         </tr>
                         <tr>
                             <th scope="row">Pricing model</th>
-                            <td>Flat annual fee, unlimited mailboxes</td>
+                            <td>Flat yearly or monthly fee, unlimited mailboxes</td>
                             <td>Typically per connected mailbox</td>
                         </tr>
                         <tr>
@@ -901,7 +914,7 @@ docker compose up -d</code></pre>
                 </details>
                 <details class="faq-item">
                     <summary><h3>How much does EmailEngine cost?</h3></summary>
-                    <p><span data-price="local">$1,450 or €1,200</span> per year<span data-monthly hidden>, or <span data-price-monthly="local"></span> per month</span>. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering.</p>
+                    <p><span data-price="local">$1,450 or €1,200</span> per year, or <span data-price-monthly="local">$169 or €139</span> per month. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering.</p>
                 </details>
                 <details class="faq-item">
                     <summary><h3>Can I build EmailEngine into a product I sell?</h3></summary>

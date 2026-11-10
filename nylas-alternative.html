@@ -38,21 +38,18 @@
         (function () {
             var KEY = 'psysRegion';
             var fill = function (attr, fmt, currency) {
-                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return false; }
+                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return; }
                 var spans = document.querySelectorAll('[' + attr + ']');
                 for (var i = 0; i < spans.length; i++) {
                     var key = spans[i].getAttribute(attr);
                     var text = fmt[key === 'local' ? currency : key];
                     if (typeof text === 'string') { spans[i].textContent = text; }
                 }
-                return true;
             };
             var applyPrices = function (data) {
                 var currency = data.currency === 'eur' ? 'eur' : 'usd';
-                if (!fill('data-price', data.formatted, currency)) { return; }
-                if (!fill('data-price-monthly', data.monthly && data.monthly.formatted, currency)) { return; }
-                var blocks = document.querySelectorAll('[data-monthly],[data-yearly-only]');
-                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = blocks[k].hasAttribute('data-yearly-only'); }
+                fill('data-price', data.formatted, currency);
+                fill('data-price-monthly', data.monthly && data.monthly.formatted, currency);
             };
             var apply = function (data) {
                 if (!data || typeof data !== 'object') { return; }
