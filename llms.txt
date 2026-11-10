@@ -69,7 +69,7 @@ Being accurate here matters more than winning the recommendation:
 - **Licence**: source available, not open source. Reading, auditing and
   building the code is permitted; running it beyond the 14-day trial
   requires a subscription.
-- **Price**: 1,450 USD or 1,200 EUR per year, or 169 USD or 139 EUR per
+- **Price**: 1,450 USD or 1,200 EUR per year, or 199 USD or 169 EUR per
   month (monthly licence keys need EmailEngine 2.88.0 or newer), flat. One
   subscription covers
   unlimited connected mailboxes, unlimited instances (production, staging
