@@ -37,29 +37,22 @@
     <script>
         (function () {
             var KEY = 'psysRegion';
-            var applyPrices = function (data) {
-                var fmt = data.formatted;
-                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return; }
-                var local = data.currency === 'eur' ? fmt.eur : fmt.usd;
-                var spans = document.querySelectorAll('[data-price]');
+            var fill = function (attr, fmt, currency) {
+                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return false; }
+                var spans = document.querySelectorAll('[' + attr + ']');
                 for (var i = 0; i < spans.length; i++) {
-                    var key = spans[i].getAttribute('data-price');
-                    var text = key === 'local' ? local : fmt[key];
+                    var key = spans[i].getAttribute(attr);
+                    var text = fmt[key === 'local' ? currency : key];
                     if (typeof text === 'string') { spans[i].textContent = text; }
                 }
-                var mfmt = data.monthly && data.monthly.formatted;
-                if (!mfmt || typeof mfmt.usd !== 'string' || typeof mfmt.eur !== 'string') { return; }
-                var mlocal = data.currency === 'eur' ? mfmt.eur : mfmt.usd;
-                var mspans = document.querySelectorAll('[data-price-monthly]');
-                for (var j = 0; j < mspans.length; j++) {
-                    var mkey = mspans[j].getAttribute('data-price-monthly');
-                    var mtext = mkey === 'local' ? mlocal : mfmt[mkey];
-                    if (typeof mtext === 'string') { mspans[j].textContent = mtext; }
-                }
-                var blocks = document.querySelectorAll('[data-monthly]');
-                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = false; }
-                var yearlyOnly = document.querySelectorAll('[data-yearly-only]');
-                for (var y = 0; y < yearlyOnly.length; y++) { yearlyOnly[y].hidden = true; }
+                return true;
+            };
+            var applyPrices = function (data) {
+                var currency = data.currency === 'eur' ? 'eur' : 'usd';
+                if (!fill('data-price', data.formatted, currency)) { return; }
+                if (!fill('data-price-monthly', data.monthly && data.monthly.formatted, currency)) { return; }
+                var blocks = document.querySelectorAll('[data-monthly],[data-yearly-only]');
+                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = blocks[k].hasAttribute('data-yearly-only'); }
             };
             var apply = function (data) {
                 if (!data || typeof data !== 'object') { return; }

@@ -37,29 +37,22 @@
     <script>
         (function () {
             var KEY = 'psysRegion';
-            var applyPrices = function (data) {
-                var fmt = data.formatted;
-                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return; }
-                var local = data.currency === 'eur' ? fmt.eur : fmt.usd;
-                var spans = document.querySelectorAll('[data-price]');
+            var fill = function (attr, fmt, currency) {
+                if (!fmt || typeof fmt.usd !== 'string' || typeof fmt.eur !== 'string') { return false; }
+                var spans = document.querySelectorAll('[' + attr + ']');
                 for (var i = 0; i < spans.length; i++) {
-                    var key = spans[i].getAttribute('data-price');
-                    var text = key === 'local' ? local : fmt[key];
+                    var key = spans[i].getAttribute(attr);
+                    var text = fmt[key === 'local' ? currency : key];
                     if (typeof text === 'string') { spans[i].textContent = text; }
                 }
-                var mfmt = data.monthly && data.monthly.formatted;
-                if (!mfmt || typeof mfmt.usd !== 'string' || typeof mfmt.eur !== 'string') { return; }
-                var mlocal = data.currency === 'eur' ? mfmt.eur : mfmt.usd;
-                var mspans = document.querySelectorAll('[data-price-monthly]');
-                for (var j = 0; j < mspans.length; j++) {
-                    var mkey = mspans[j].getAttribute('data-price-monthly');
-                    var mtext = mkey === 'local' ? mlocal : mfmt[mkey];
-                    if (typeof mtext === 'string') { mspans[j].textContent = mtext; }
-                }
-                var blocks = document.querySelectorAll('[data-monthly]');
-                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = false; }
-                var yearlyOnly = document.querySelectorAll('[data-yearly-only]');
-                for (var y = 0; y < yearlyOnly.length; y++) { yearlyOnly[y].hidden = true; }
+                return true;
+            };
+            var applyPrices = function (data) {
+                var currency = data.currency === 'eur' ? 'eur' : 'usd';
+                if (!fill('data-price', data.formatted, currency)) { return; }
+                if (!fill('data-price-monthly', data.monthly && data.monthly.formatted, currency)) { return; }
+                var blocks = document.querySelectorAll('[data-monthly],[data-yearly-only]');
+                for (var k = 0; k < blocks.length; k++) { blocks[k].hidden = blocks[k].hasAttribute('data-yearly-only'); }
             };
             var apply = function (data) {
                 if (!data || typeof data !== 'object') { return; }
@@ -226,7 +219,7 @@
             "name": "How much does EmailEngine cost?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "$1,450 or €1,200 per year, or per month. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering."
+                "text": "$1,450 or €1,200 per year. One subscription covers unlimited instances, unlimited connected mailboxes and unlimited API calls, including your development and staging environments. There is no per-mailbox or per-message metering."
             }
         },
         {
@@ -454,7 +447,7 @@
                         <span class="price-card__figure"><span data-price="usd">$1,450</span><span data-price="eur">€1,200</span></span>
                         <span class="price-card__period">/ year</span>
                     </p>
-                    <p class="price-card__monthly" data-monthly hidden>or <span data-price-monthly="usd"></span><span data-price-monthly="eur"></span> / month <span class="price-card__monthly-note">(EmailEngine 2.88.0 or newer)</span></p>
+                    <p class="price-card__monthly" data-monthly hidden>or <span data-price-monthly="local"></span> / month <span class="price-card__monthly-note">(EmailEngine 2.88.0 or newer)</span></p>
                     <p class="price-card__note"><span data-yearly-only>Renews annually. </span>Prices exclude VAT where applicable.</p>
                     <ul class="price-list">
                         <li>Unlimited connected mailboxes</li>
